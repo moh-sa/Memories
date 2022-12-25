@@ -29,10 +29,19 @@ The project uses double authentication tokens (access and refrech) approuch, nex
 
 
 ## Built With
-
-  **Client**: https://memories.tno.dev
-
-  **Server**: https://memories.tno.dev
+### Client
+| Client |
+| :-------- |
+| ReactJs |
+| Mantine |
+| Redux (RTK) |
+| Axios |
+| react-router |
+| yup |
+| react-hook-form |
+| react-moment |
+| react-jwt |
+| react-icons |
 
 
 
