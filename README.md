@@ -15,6 +15,7 @@
     An Awesome ReadME Generator To Jumpstart Your Projects!
     <br/>
     <br/>
+    ![Screen Shot](images/screenshot1.jpg)
   <br/>
     <br/>
   </p>
