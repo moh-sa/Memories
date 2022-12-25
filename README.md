@@ -15,6 +15,8 @@
   This is my <strong>first</strong> personal MERN project that I built entiery from scratch.
   <br/>
 The project uses double authentication tokens (access and refrech) approuch, next-gen image format (webp), and account activation via email.
+
+Note: The app is <i>inspired</i> (logo, and concept) by <a href="https://youtu.be/VsUzmlZfYNg">JavaScript Mastery</a>'s project.
     <br/>
     <br/>
   </p>
