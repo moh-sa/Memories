@@ -30,9 +30,8 @@ The project uses double authentication tokens (access and refrech) approuch, nex
 
 ## Built With
 ### - Client
-| Client |
-| :-------- |
 | ReactJs |
+| :-------- |
 | Mantine |
 | Redux (RTK) |
 | Axios |
