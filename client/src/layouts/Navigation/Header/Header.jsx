@@ -34,7 +34,7 @@ const Header = () => {
           project.⚠
         </div>
         <div>
-          Check the <a href="https://github.com/moh-sa/Memories">repo</a>
+          Check the <a href="https://github.com/moh-sa/Memories">Github repo</a>
         </div>
       </div>
       <Container>
