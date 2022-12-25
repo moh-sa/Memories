@@ -22,6 +22,9 @@ The project uses double authentication tokens (access and refrech) approuch, nex
 
 
 
+
+
+
 ## Demo
 
   **URL**: https://memories.tno.dev
@@ -31,9 +34,10 @@ The project uses double authentication tokens (access and refrech) approuch, nex
 
 
 
+
+
+
 ## Built With
-
-
 ### - Client
 | ReactJs |
 | :-------- |
@@ -46,6 +50,10 @@ The project uses double authentication tokens (access and refrech) approuch, nex
 | react-moment |
 | react-jwt |
 | react-icons |
+
+
+
+
 
 
 
@@ -62,6 +70,10 @@ The project uses double authentication tokens (access and refrech) approuch, nex
 | dotenv |
 | cors |
 | bcrypt |
+
+
+
+
 
 
 
