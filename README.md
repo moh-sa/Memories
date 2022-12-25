@@ -9,10 +9,12 @@
     <img src="images/logo.png" alt="Logo">
   </a>
 
-  <h3 align="center">ReadME Generator</h3>
+  <h3 align="center">Memories</h3>
 
   <p align="center">
-    An Awesome ReadME Generator To Jumpstart Your Projects!
+    This is my **first** personal MERN project that I built entiery from scratch.
+  <br/>
+The project uses double authentication tokens (access and refrech) approuch, next-gen image format (webp), and account activation via email.
     <br/>
     <br/>
   </p>
@@ -25,13 +27,16 @@
   **URL**: https://memories.tno.dev
 
 
+## Built With
+
+  **Client**: https://memories.tno.dev
+
+  **Server**: https://memories.tno.dev
+
+
+
 ## Tour
 
   ![Screen Shot](images/screenshot1.jpg)
 
 https://user-images.githubusercontent.com/46880411/209477231-7662ab34-55b8-4068-8346-1f753a12e079.mp4
-
-
-## Built With
-
-sfsdfsdfsdf
