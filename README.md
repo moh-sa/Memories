@@ -15,21 +15,19 @@
     An Awesome ReadME Generator To Jumpstart Your Projects!
     <br/>
     <br/>
-    ![Screen Shot](images/screenshot1.jpg)
-  <br/>
-    <br/>
   </p>
 </p>
 
 
-  ![Screen Shot](images/screenshot1.jpg)
 
 ## Demo
 
   **URL**: https://memories.tno.dev
 
 
-## Video
+## Tour
+
+  ![Screen Shot](images/screenshot1.jpg)
 
 https://user-images.githubusercontent.com/46880411/209477231-7662ab34-55b8-4068-8346-1f753a12e079.mp4
 
