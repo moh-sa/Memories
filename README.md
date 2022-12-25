@@ -29,6 +29,8 @@ The project uses double authentication tokens (access and refrech) approuch, nex
 
 
 ## Built With
+
+
 ### - Client
 | ReactJs |
 | :-------- |
@@ -41,6 +43,22 @@ The project uses double authentication tokens (access and refrech) approuch, nex
 | react-moment |
 | react-jwt |
 | react-icons |
+
+
+
+### - Server
+| ExpressJs |
+| :-------- |
+| Mongoose |
+| NodeMailer |
+| Cloudinary |
+| cookie-parser |
+| react-router |
+| uuid |
+| jsonwebtoken |
+| dotenv |
+| cors |
+| bcrypt |
 
 
 
