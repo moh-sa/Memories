@@ -25,6 +25,8 @@ The project uses double authentication tokens (access and refrech) approuch, nex
 ## Demo
 
   **URL**: https://memories.tno.dev
+  
+    ![Screen Shot](images/screenshot1.jpg)
 
 
 
@@ -63,7 +65,5 @@ The project uses double authentication tokens (access and refrech) approuch, nex
 
 
 ## Tour
-
-  ![Screen Shot](images/screenshot1.jpg)
 
 https://user-images.githubusercontent.com/46880411/209477231-7662ab34-55b8-4068-8346-1f753a12e079.mp4
