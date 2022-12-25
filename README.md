@@ -12,7 +12,7 @@
   <h3 align="center">Memories</h3>
 
   <p align="center">
-    This is my **first** personal MERN project that I built entiery from scratch.
+  This is my <strong>first</strong> personal MERN project that I built entiery from scratch.
   <br/>
 The project uses double authentication tokens (access and refrech) approuch, next-gen image format (webp), and account activation via email.
     <br/>
