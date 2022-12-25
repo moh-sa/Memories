@@ -23,13 +23,12 @@ The project uses double authentication tokens (access and refrech) approuch, nex
 
 
 
+![Screen Shot](images/screenshot1.jpg)
 
 
 ## Demo
 
   **URL**: https://memories.tno.dev
-  
-![Screen Shot](images/screenshot1.jpg)
 
 
 
