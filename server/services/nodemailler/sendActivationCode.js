@@ -8,7 +8,7 @@ const domain =
 const sendEmail = async (name, email, code) => {
   const link = `${domain}/activation?code=${code}`;
   const sentEmail = await client.sendMail({
-    from: '"Memories Family" <${process.env.EMAIL}>',
+    from: `"Memories Family" <${process.env.EMAIL}>`,
     to: email,
     subject: "Memories - Account Activation",
     text: "Hello world?",
