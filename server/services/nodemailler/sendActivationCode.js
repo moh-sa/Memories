@@ -3,7 +3,7 @@ import client from "./options.js";
 const domain =
   process.env.NODE_ENV === "development"
     ? "http://localhost:3000"
-    : "https://memories.tno-msa.com";
+    : "https://memories.tno.dev";
 
 const sendEmail = async (name, email, code) => {
   const link = `${domain}/activation?code=${code}`;
