@@ -1,7 +1,9 @@
 import nodemailer from "nodemailer";
 
 const client = nodemailer.createTransport({
-  service: process.env.EMAIL_SERVICE,
+  host: process.env.EMAIL_HOST,
+  port: process.env.EMAIL_PORT,
+  secure: true,
   auth: {
     user: process.env.EMAIL,
     pass: process.env.EMAIL_PASSWORD,
