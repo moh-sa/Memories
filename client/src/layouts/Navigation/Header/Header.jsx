@@ -26,6 +26,7 @@ const Header = () => {
           marginTop: "-12px",
           marginBottom: "10px",
           textAlign: "center",
+          fontSize: "0.9em",
         }}
       >
         <div>
