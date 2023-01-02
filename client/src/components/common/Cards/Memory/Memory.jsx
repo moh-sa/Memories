@@ -94,7 +94,7 @@ const Memory = ({ data, user, like, edit, _delete }) => {
         />
 
         {/* Memory Details */}
-        <Card.Section pl="sm" pr="sm" my="md">
+        <Card.Section className={classes.memeryDetails}>
           <div>
             {/* Title and Description */}
             <Text
@@ -125,7 +125,7 @@ const Memory = ({ data, user, like, edit, _delete }) => {
 
         {/* Buttons */}
         {isLoggedIn && (
-          <Card.Section withBorder p="sm" className={classes.buttons}>
+          <Card.Section withBorder className={classes.buttons}>
             {/* Like Button */}
             <Button
               fullWidth
