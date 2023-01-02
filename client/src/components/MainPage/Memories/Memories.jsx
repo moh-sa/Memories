@@ -14,7 +14,7 @@ const Memories = ({ data, user, like, edit, _delete }) => {
       className={classes.GridCol}
       xs={12}
       sm={6}
-      md={6}
+      md={4}
       lg={3}
     >
       <Common.Cards.Memory
