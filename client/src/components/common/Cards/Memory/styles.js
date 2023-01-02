@@ -2,18 +2,20 @@ import { createStyles } from "@mantine/core";
 
 export const useStyles = createStyles((theme, _params, getRef) => ({
   card: {
+    display: "flex",
+    alignItems: "flex-end",
+    justifyItems: "center",
+    flexDirection: "column",
+    flex: -1,
+
     borderRadius: theme.radius.md,
     boxShadow: theme.shadows.md,
+    width: "24em",
+    height: "100%",
 
     [`&:hover .${getRef("cover")}`]: {
       transform: "scale(1.03)",
     },
-    // [`&:hover .${getRef("badge")}`]: {
-    //   backgroundColor:
-    //     theme.colorScheme === "light"
-    //       ? theme.fn.rgba(theme.colors.gray[2], 1)
-    //       : theme.fn.rgba(theme.colors.gray[7], 1),
-    // },
   },
 
   coverWrapper: {
@@ -52,10 +54,6 @@ export const useStyles = createStyles((theme, _params, getRef) => ({
     top: "420px",
     pointerEvents: "none",
     backgroundColor: "transparent",
-    // backgroundColor:
-    //   theme.colorScheme === "light"
-    //     ? theme.fn.rgba(theme.colors.gray[2], 0.65)
-    //     : theme.fn.rgba(theme.colors.gray[7], 0.65),
   },
 
   like: {
@@ -87,6 +85,16 @@ export const useStyles = createStyles((theme, _params, getRef) => ({
 
   buttons: {
     display: "flex",
+    width: "100%",
+    padding: "12px",
+    margin: "auto",
     gap: theme.spacing.xs,
+  },
+
+  memeryDetails: {
+    width: "100%",
+    paddingRight: "10px",
+    paddingLeft: "10px",
+    margin: "auto 16px",
   },
 }));
