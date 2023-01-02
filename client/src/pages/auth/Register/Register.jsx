@@ -141,7 +141,6 @@ const Register = () => {
               mt="xl"
               type="submit"
               loading={isLoading}
-              disabled={isLoading}
               loaderPosition="right"
               leftIcon={<TbSend size={18} />}
               fullWidth
