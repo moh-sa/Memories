@@ -18,26 +18,6 @@ const Header = () => {
 
   return (
     <HeaderCom py="sm">
-      <div
-        style={{
-          backgroundColor: "darkgrey",
-          color: "white",
-          padding: "3px",
-          marginTop: "-12px",
-          marginBottom: "10px",
-          textAlign: "center",
-          fontSize: "0.9em",
-        }}
-      >
-        <div>
-          ⚠This app is inspired by{" "}
-          <a href="https://youtu.be/VsUzmlZfYNg">JavaScript Mastery</a> 's
-          project.⚠
-        </div>
-        <div>
-          Check the <a href="https://github.com/moh-sa/Memories">Github repo</a>
-        </div>
-      </div>
       <Container>
         <Grid>
           <Grid.Col span={4} style={{ margin: "auto 0" }}>
