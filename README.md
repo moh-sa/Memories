@@ -20,7 +20,7 @@ The project uses double authentication tokens (access and refrech) approuch, nex
 
 ## Demo
 
-**URL**: https://memories.tno.dev
+**URL**: https://memories.moh-sa.dev
 
 ## Built With
 
