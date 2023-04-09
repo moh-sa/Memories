@@ -25,17 +25,18 @@ The project uses double authentication tokens (access and refrech) approuch, nex
 ## Built With
 
 | **Client**      | **Server**    |
-| :-------------- | :------------ | ------------ |
+| :-------------- | :------------ | 
 | ReactJs         | ExpressJs     |
 | Mantine         | Mongoose      |
 | Redux (RTK)     | NodeMailer    |
 | Axios           | Cloudinary    |
 | react-router    | cookie-parser |
-| yup             | react-router  | jsonwebtoken |
+| yup             | react-router  |
 | react-hook-form | dotenv        |
 | react-moment    | cors          |
 | react-jwt       | bcrypt        |
 | react-icons     | uuid          |
+| -     | jsonwebtoken  |
 
 ## Tour
 
