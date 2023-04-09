@@ -3,6 +3,11 @@ import { helpers } from "../../utils/index.js";
 import { imgConfig } from "../../configs/index.js";
 
 export default async function (req, res) {
+  
+  console.log(req.protocol);
+  console.log(req.originalUrl);
+  console.log(req.get("host"));
+  
   const { page, type } = req.query;
   const { userId } = res.locals;
   const isMemory = type === "memories" && { author: userId };
