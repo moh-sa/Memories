@@ -31,12 +31,11 @@ The project uses double authentication tokens (access and refrech) approuch, nex
 | Redux (RTK)     | NodeMailer    |
 | Axios           | Cloudinary    |
 | react-router    | cookie-parser |
-| yup             | react-router  |
-| react-hook-form | dotenv        |
-| react-moment    | cors          |
-| react-jwt       | bcrypt        |
-| react-icons     | uuid          |
-| -     | jsonwebtoken  |
+| yup             | dotenv  |
+| react-hook-form | cors        |
+| react-moment    | bcrypt          |
+| react-jwt       | uuid        |
+| react-icons     | jsonwebtoken          |
 
 ## Tour
 
