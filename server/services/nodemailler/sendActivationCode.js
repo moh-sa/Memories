@@ -1,12 +1,7 @@
 import client from "./options.js";
 
-const domain =
-  process.env.NODE_ENV === "development"
-    ? "http://localhost:3000"
-    : "https://memories.moh-sa.dev";
-
 const sendEmail = async (name, email, code) => {
-  const link = `${domain}/activation?code=${code}`;
+  const link = `${process.env.FRONT_URL}/activation?code=${code}`;
   const sentEmail = await client.sendMail({
     from: `"Memories" <${process.env.EMAIL}>`,
     to: email,

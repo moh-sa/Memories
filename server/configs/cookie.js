@@ -1,17 +1,20 @@
+const domain = process.env.COOKIE_DOMAIN;
+const secure = process.env.COOKIE_SECURE === "true";
+
 const access = {
   name: process.env.COOKIE_ACCESS_NAME,
   options: {
     sameSite: "lax",
-    domain: process.env.NODE_ENV === "development" ? "localhost" : ".moh-sa.dev",
+    domain,
     httpOnly: false,
-    secure: process.env.NODE_ENV === "development" ? false : true,
+    secure,
     maxAge: process.env.ACCESS_EXP,
   },
   delete: {
     sameSite: "lax",
-    domain: process.env.NODE_ENV === "development" ? "localhost" : ".moh-sa.dev",
+    domain,
     httpOnly: false,
-    secure: process.env.NODE_ENV === "development" ? false : true,
+    secure,
     maxAge: new Date(null),
   },
 };
@@ -20,16 +23,16 @@ const refresh = {
   name: process.env.COOKIE_REFRESH_NAME,
   options: {
     sameSite: "lax",
-    domain: process.env.NODE_ENV === "development" ? "localhost" : ".moh-sa.dev",
+    domain,
     httpOnly: true,
-    secure: process.env.NODE_ENV === "development" ? false : true,
+    secure,
     maxAge: process.env.REFRESH_EXP,
   },
   delete: {
     sameSite: "lax",
-    domain: process.env.NODE_ENV === "development" ? "localhost" : ".moh-sa.dev",
+    domain,
     httpOnly: true,
-    secure: process.env.NODE_ENV === "development" ? false : true,
+    secure,
     maxAge: new Date(null),
   },
 };
