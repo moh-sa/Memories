@@ -4,6 +4,7 @@ export default async function upload(payload) {
   const { public_id } = await base.upload(payload, {
     format: "webp",
     moderation: "aws_rek",
+    folder: "memories",
   });
 
   return public_id;
