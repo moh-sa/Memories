@@ -1,7 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
 import { userModel } from "../../models/index.js";
-import { email } from "../../services/index.js";
-import { cloudinary } from "../../services/index.js";
+import { cloudinary, email } from "../../services/index.js";
 
 export default async function (req, res) {
   const data = req.body;
@@ -11,11 +10,14 @@ export default async function (req, res) {
     activationCode: uuidv4(),
   };
 
-  console.log(userData.avatar.substring(0, 30));
+  console.info("USER DATA: ", userData);
+
+  // console.log(userData.avatar.substring(0, 30));
 
   try {
     userData.avatar = await cloudinary.upload(userData.avatar);
   } catch (error) {
+    console.error("ERROR WHILE UPLOADING AVATAR: ", error);
     return res.status(503).json({
       accessToken: response,
       memory: {
@@ -26,18 +28,22 @@ export default async function (req, res) {
     });
   }
 
-  console.log(userData.avatar);
+  console.info("USER DATA AFTER UPLOADING AVATAR: ", userData);
+  // console.log(userData.avatar);
 
   try {
     const newUser = await userModel.create(userData);
-
+    console.info("NEW USER CREATED: ", newUser);
     await newUser.save();
+    console.info("NEW USER SAVED");
 
     await email.activationCode(
       newUser.username,
       newUser.email,
-      userData.activationCode
+      userData.activationCode,
     );
+
+    console.info("EMAIL SENT");
 
     res.status(201).json({
       statusCode: 201,
@@ -46,7 +52,8 @@ export default async function (req, res) {
         "You have been successfully registered. Please check your email to activate the account.",
     });
   } catch (error) {
-    console.log(error.message);
+    console.error("ERROR WHILE CREATING NEW USER: ", error);
+    // console.log(error.message);
     res.status(503).json({
       statusCode: 503,
       from: "controllers/auth/register 3",
