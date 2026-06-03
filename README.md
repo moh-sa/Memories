@@ -1,42 +1,115 @@
-<br/>
-<p align="center">
-  <a href="[https://github.com//](https://github.com/moh-sa/Memories)">
-    <img src="images/logo.webp" width="128" height="128" alt="Logo">
-  </a>
+# Memories
 
-  <h3 align="center">Memories</h3>
+A full-stack social platform built with React and Node.js, featuring
+cookie-based JWT auth, email activation, rich text posts, and tag-based
+Spotlight search.
 
-  <p align="center">
-  This is my <strong>first</strong> personal MERN project that I built entiery from scratch.
-  <br/>
-The project uses double authentication tokens (access and refrech) approuch, next-gen image format (webp), and account activation via email.
-<br/>
-<br/>
+**Live demo:** [memories.moh-sa.dev](https://memories.moh-sa.dev) ·
+**Portfolio:** [moh-sa.dev](https://moh-sa.dev) · **LinkedIn:**
+[linkedin.com/in/moh-sa](https://linkedin.com/in/moh-sa)
 
-  </p>
-</p>
+![Memories feed](assets/hero.webp)
 
-![Screen Shot](images/screenshot1.webp)
+<details>
+<summary>More screenshots</summary>
 
-## Demo
+![Memory detail](assets/memory.webp)
+![Create memory](assets/create-memory.webp)
 
-**URL**: https://memories.moh-sa.dev
-
-## Built With
-
-| **Client**      | **Server**    |
-| :-------------- | :------------ | 
-| ReactJs         | ExpressJs     |
-| Mantine         | Mongoose      |
-| Redux (RTK)     | NodeMailer    |
-| Axios           | Cloudinary    |
-| react-router    | cookie-parser |
-| yup             | dotenv  |
-| react-hook-form | cors        |
-| react-moment    | bcrypt          |
-| react-jwt       | uuid        |
-| react-icons     | jsonwebtoken          |
+</details>
 
 ## Tour
 
 https://user-images.githubusercontent.com/46880411/209540393-7474e7d2-b27a-4257-bebc-33479e333f71.mp4
+
+## Features
+
+- Home feed with paginated memory cards
+- Create memories with a rich text editor, tags, and a cover image
+- Like memories and comments
+- Edit or delete your own memories and comments
+- Spotlight search (Cmd/Ctrl+K) by title or tag with a dedicated results page
+- Recommendations on memory detail pages via MongoDB aggregation
+- User profiles with memory and liked lists
+- Email activation on registration before login is allowed
+- Cookie-based auth with access and refresh JWTs
+- Light/dark theme with keyboard shortcut (Cmd/Ctrl+J)
+
+## Engineering highlights
+
+- **Auth:** Cookie-based JWT auth with email activation via Nodemailer. Expired
+  access tokens are silently refreshed in middleware on the same request, with
+  no dedicated refresh endpoint.
+- **Media:** Images converted to base64 on the client and uploaded to Cloudinary
+  via JSON body. Stored as public IDs and served with server-generated
+  transformation URLs.
+- **Search:** Spotlight (Cmd/Ctrl+K) with live title results. Dedicated search
+  page supports title and tag queries with pagination.
+- **Recommendations:** Related memories fetched via MongoDB aggregation. Uses
+  `$match` on shared tags and `$sample` for random selection.
+
+## Tech stack
+
+| Layer          | Technologies                                       |
+| -------------- | -------------------------------------------------- |
+| **Frontend**   | React, React Router, Redux Toolkit, Mantine, Axios |
+| **Backend**    | Node.js, Express, Mongoose                         |
+| **Data**       | MongoDB                                            |
+| **Auth**       | Custom JWT (access + refresh cookies)              |
+| **Media**      | Cloudinary                                         |
+| **Email**      | Nodemailer                                         |
+| **Validation** | react-hook-form, Yup                               |
+
+## Architecture
+
+### Auth and activation flow
+
+```mermaid
+sequenceDiagram
+  participant Browser
+  participant Client as React client
+  participant API as Express API
+  participant DB as MongoDB
+  participant Email as Nodemailer
+
+  Browser->>Client: Register
+  Client->>API: POST /auth/register
+  API->>DB: Create user (isActive: false)
+  API->>Email: Send activation link with UUID
+  Browser->>Client: Click activation link
+  Client->>API: GET /auth/verifyCode?code=<uuid>
+  API->>DB: Set isActive: true
+  Browser->>Client: Sign in
+  Client->>API: POST /auth/login
+  API->>DB: Validate credentials and isActive
+  API-->>Browser: Set access cookie + httpOnly refresh cookie
+  Client->>API: Protected request + cookies
+  alt Refresh missing or expired
+    API-->>Client: 401 — re-login required
+  else Refresh valid, access valid
+    API-->>Client: 200 + data
+  else Refresh valid, access expired
+    API->>DB: Load fresh user data
+    API-->>Browser: New access cookie (silent)
+    API-->>Client: 200 + data
+  end
+```
+
+## Quick start
+
+**Prerequisites:** Node.js 18+, MongoDB, a [Cloudinary](https://cloudinary.com/)
+account, and an SMTP email account for activation emails.
+
+```bash
+# Terminal 1 — Server (default: http://localhost:5000)
+cd server && npm install && cp .env.example .env
+node seed/seed.js   # optional — seeds the database with sample data
+npm start
+
+# Terminal 2 — Client (default: http://localhost:3000)
+cd client && npm install && cp .env.example .env
+npm start
+```
+
+Fill in both `.env` files. Both `.env.example` files document every required
+variable.
