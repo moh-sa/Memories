@@ -3,7 +3,7 @@ import authReducer from "./auth/auth.slice";
 import memoryReducer from "./memory/memory.slice";
 import memoriesReducer from "./memories/memories.slice";
 import commentsReducer from "./comments/comments.slice";
-const ENV = process.env.NODE_ENV === "development";
+const ENV = import.meta.env.DEV;
 
 const store = configureStore({
   reducer: {

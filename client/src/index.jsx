@@ -8,7 +8,7 @@ import App from "./App";
 import { ScrollToTop } from "components";
 import store from "store/store";
 
-if (process.env.NODE_ENV === "production") {
+if (import.meta.env.PROD) {
   disableReactDevTools();
 }
 
