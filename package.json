@@ -1,0 +1,5 @@
+{
+  "name": "memories-root",
+  "private": true,
+  "scripts": { "prepare": "husky" }
+}
