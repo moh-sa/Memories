@@ -6,7 +6,7 @@ import { useTitle } from "Hooks";
 // Actions
 import { user } from "services";
 // Components
-import Moment from "react-moment";
+import { FormattedDate } from "components/common/RelativeTime/RelativeTime";
 // UI Components
 import { Common } from "components";
 import { Container, Indicator, Grid, Title } from "@mantine/core";
@@ -178,7 +178,7 @@ const Label = ({ date }: { date: string }) => {
     <Badge color="green" leftSection={<FaClock />}>
       Since
       {" "}
-      <Moment format="YYYY/MM/DD">{date}</Moment>
+      <FormattedDate>{date}</FormattedDate>
     </Badge>
   );
 };

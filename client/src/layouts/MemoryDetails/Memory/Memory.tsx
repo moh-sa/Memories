@@ -1,7 +1,7 @@
 // Hooks
 import { useStyles } from "./styles";
 // Components
-import Moment from "react-moment";
+import RelativeTime from "components/common/RelativeTime/RelativeTime";
 // UI Components
 import { Markup } from "interweave";
 import { Group, Title, Text, Avatar } from "@mantine/core";
@@ -73,9 +73,9 @@ const Memory = ({ data, like, user }: MemoryProps) => {
           <Text size="sm" color="dimmed">{` • `}</Text>
           {/* Since when? */}
           <Text size="sm" color="dimmed">
-            <Moment interval={60000} fromNow>
+            <RelativeTime interval={60000}>
               {data.createdAt}
-            </Moment>
+            </RelativeTime>
           </Text>
           <Text size="sm" color="dimmed">{` • `}</Text>
           {/* Like Button */}

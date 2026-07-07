@@ -6,7 +6,7 @@ import { useLocalStorage } from "@mantine/hooks";
 // Actions
 import { like, _delete } from "store/comments/comments.thunk";
 // Components
-import Moment from "react-moment";
+import RelativeTime from "components/common/RelativeTime/RelativeTime";
 // UI Components
 import OptionsButton from "components/Comments/OptionsButton/OptionsButton";
 import Modals from "components/common/Modals";
@@ -78,9 +78,9 @@ const Comment = ({ data, user }: CommentCardProps) => {
               <Text size="sm">{data.author.username}</Text>
               <Text size="xs" color="dimmed">
                 <Group>
-                  <Moment fromNow interval={60000}>
+                  <RelativeTime interval={60000}>
                     {data.createdAt}
-                  </Moment>
+                  </RelativeTime>
                 </Group>
               </Text>
             </div>

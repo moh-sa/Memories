@@ -3,7 +3,7 @@ import { useStyles } from "./styles";
 // Components
 import { Link } from "react-router-dom";
 // UI Components
-import Moment from "react-moment";
+import RelativeTime from "components/common/RelativeTime/RelativeTime";
 import { Card, Text, Group, Center } from "@mantine/core";
 // Icons
 import { FaRegClock, FaHeart } from "react-icons/fa";
@@ -54,9 +54,9 @@ const Recommendation = ({ data }: { data: Memory }) => {
               <Center>
                 <FaRegClock size={16} color={theme.colors.dark[2]} />
                 <Text size="sm" className={classes.bodyText}>
-                  <Moment fromNow interval={60000}>
+                  <RelativeTime interval={60000}>
                     {data.createdAt}
-                  </Moment>
+                  </RelativeTime>
                 </Text>
               </Center>
             </Group>
