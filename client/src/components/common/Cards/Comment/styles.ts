@@ -1,6 +1,6 @@
 import { createStyles } from "@mantine/core";
 
-export const useStyles = createStyles((theme) => ({
+export const useStyles = createStyles(theme => ({
   paper: {
     padding: `${theme.spacing.lg}px ${theme.spacing.xl}px`,
     marginBottom: theme.spacing.xs,

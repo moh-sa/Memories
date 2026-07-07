@@ -2,7 +2,7 @@ import { showNotification } from "@mantine/notifications";
 import { TbX } from "react-icons/tb";
 
 const Failure = (title: string, message: string) => {
-  return showNotification({
+  showNotification({
     title,
     message,
     autoClose: 10000,

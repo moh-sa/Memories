@@ -1,10 +1,15 @@
-//Hooks
+// Hooks
 import { useStyles } from "./styles";
 import { Link, useLocation } from "react-router-dom";
 import { useTitle } from "Hooks";
-//UI Components
+// UI Components
 import { Container, Title, Text, Button, Group } from "@mantine/core";
-//Variables
+// Types
+interface MissingLocationState {
+  code?: number;
+  msg?: string;
+}
+// Variables
 const defautValues = {
   code: 404,
   title: "You have found a secret place.",
@@ -12,16 +17,16 @@ const defautValues = {
 };
 
 const Missing = () => {
-  //Hookes
+  // Hookes
   const { classes } = useStyles();
   const location = useLocation();
   const { setTitle } = useTitle();
-  //Variables
-  const { state } = location;
-  const code = state?.code ? state?.code : defautValues.code;
+  // Variables
+  const state = location.state as MissingLocationState | null;
+  const code = state?.code ? state.code : defautValues.code;
   const title = state?.code ? "Uh Oh!" : defautValues.title;
-  const msg = state?.msg ? state?.msg : defautValues.msg;
-  //setTitle
+  const msg = state?.msg ? state.msg : defautValues.msg;
+  // setTitle
   setTitle("page not found");
 
   return (

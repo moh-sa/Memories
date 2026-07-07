@@ -1,15 +1,15 @@
 import { useMantineColorScheme } from "@mantine/core";
 
 const useDarkMode = () => {
-  const { colorScheme, toggleColorScheme } = useMantineColorScheme();
+  const colorSchemeCtx = useMantineColorScheme();
 
   const toggleThemes = () => {
-    return toggleColorScheme();
+    colorSchemeCtx.toggleColorScheme();
   };
 
   return {
     toggle: toggleThemes,
-    theme: colorScheme,
+    theme: colorSchemeCtx.colorScheme,
   };
 };
 

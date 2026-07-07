@@ -1,11 +1,11 @@
-//Hooks
+// Hooks
 import type { ComponentProps, ReactNode } from "react";
 import { useState, useRef, useEffect } from "react";
-//UI Components
+// UI Components
 import { RichTextEditor } from "@mantine/rte";
 import type Editor from "react-quill";
 import { Text } from "@mantine/core";
-//Options
+// Options
 import options from "./options";
 
 interface RichTextEditorMemoryProps {
@@ -22,7 +22,7 @@ const Memory = ({
   const [value, setValue] = useState(initalValue);
   const editorRef = useRef<Editor>(null);
 
-  const handleOnChange = async (data: string) => {
+  const handleOnChange = (data: string) => {
     setValue(data);
     sendData({
       body: data,
@@ -55,7 +55,9 @@ const Memory = ({
   return (
     <div>
       <Text size="sm">
-        Body <span style={{ color: "red" }}>*</span>
+        Body
+        {" "}
+        <span style={{ color: "red" }}>*</span>
       </Text>
       {err && (
         <Text size={12} color="red">

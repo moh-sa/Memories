@@ -1,7 +1,7 @@
 import { showNotification } from "@mantine/notifications";
 
 const PendingNoti = (id: string, title: string, message: string) => {
-  return showNotification({
+  showNotification({
     id,
     title,
     message,

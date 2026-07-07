@@ -1,18 +1,18 @@
-//Hooks
+// Hooks
 import { useState, useEffect } from "react";
 import { useStyles } from "./styles";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useParams, useLocation, Link } from "react-router-dom";
 import { useTitle, useLocalStorage } from "Hooks";
-//Actions
+// Actions
 import { getAll, like, _delete } from "store/memories/memories.thunk";
-//UI Components
+// UI Components
 import { Common, MainPage } from "components";
 import { Container, Title, Text, Button } from "@mantine/core";
-//Icons
+// Icons
 import { MdArrowBackIosNew } from "react-icons/md";
-//Types
+// Types
 import type { AppDispatch, RootState } from "store/store";
 import type {
   ApiError,
@@ -23,7 +23,7 @@ import type {
 } from "types";
 
 const Memories = () => {
-  //Hookes
+  // Hookes
   const { classes } = useStyles();
   const dispatch = useDispatch<AppDispatch>();
   const { set } = useLocalStorage();
@@ -32,25 +32,25 @@ const Memories = () => {
   const { username } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
   const { setTitle } = useTitle();
-  //states
+  // states
   const [isLoading, setIsLoading] = useState(true);
-  //Selectors
+  // Selectors
   const data = useSelector((state: RootState) => state.memories);
   const { user } = useSelector((state: RootState) => state.auth);
-  //Variables
+  // Variables
   const currentPage = searchParams.get("page") ? searchParams.get("page") : 1;
-  //Checkers
-  const isReady = data?.memories !== null;
-  const isExists = (data?.memories?.length as number) > 0;
-  const isMemory =
-    pathname.includes("Memories") || pathname.includes("memories");
+  // Checkers
+  const isReady = data.memories !== null;
+  const isExists = (data.memories?.length as number) > 0;
+  const isMemory
+    = pathname.includes("Memories") || pathname.includes("memories");
   const isLike = pathname.includes("Likes") || pathname.includes("likes");
-  //Variables
+  // Variables
   const type = isMemory ? "memories" : isLike && "likes";
-  //setTitle
+  // setTitle
   setTitle(`${username} type`);
 
-  const handleOnPageChange = async (data: number) => {
+  const handleOnPageChange = (data: number) => {
     setSearchParams({ page: data as unknown as string });
   };
 
@@ -73,7 +73,7 @@ const Memories = () => {
     const { payload } = await dispatch(getAll({ page, username, type }));
     const errorPayload = payload as ApiError | undefined;
     if (errorPayload?.statusCode === 404) {
-      navigate(`/${errorPayload?.statusCode}`, {
+      navigate(`/${errorPayload.statusCode}`, {
         state: { code: errorPayload.statusCode, msg: errorPayload.message },
       });
     }
@@ -82,7 +82,9 @@ const Memories = () => {
   };
 
   useEffect(() => {
-    getAllMemories(currentPage);
+    void (async () => {
+      await getAllMemories(currentPage);
+    })();
   }, [currentPage]);
 
   return (
@@ -90,16 +92,24 @@ const Memories = () => {
       <Container size="xl">
         {isLoading && <Common.LoadingOverlay />}
         <Text transform="capitalize" component={Link} to={`/user/${username}`}>
-          <MdArrowBackIosNew /> back to profile
+          <MdArrowBackIosNew />
+          {" "}
+          back to profile
         </Text>
         <Title order={3} my="md">
-          {username}'s {type}
+          {username}
+          &apos;s
+          {type}
         </Title>
         {isReady && !isExists && (
           <div className={classes.notFound}>
             <Title order={2}>Uh Oh!</Title>
-            <Text>{username} have no memories</Text>
-            <Button onClick={() => navigate(-1)} mt="md">
+            <Text>
+              {username}
+              {" "}
+              have no memories
+            </Text>
+            <Button onClick={() => { navigate(-1); }} mt="md">
               Go Back
             </Button>
           </div>

@@ -1,21 +1,21 @@
-//Hooks
+// Hooks
 import type { ComponentProps } from "react";
 import { useStyles } from "./styes";
 import { useSelector } from "react-redux";
-//Components
+// Components
 import { Link } from "react-router-dom";
-//UI Components
+// UI Components
 import { Box, Button, Group, Grid, ActionIcon } from "@mantine/core";
 import { Header as HeaderCom, Container } from "@mantine/core";
 import { Common, Navbar } from "components";
-//Icons
+// Icons
 import { TbLogin } from "react-icons/tb";
 import type { RootState } from "store/store";
 
 const Header = () => {
-  //hooks
+  // hooks
   const { classes } = useStyles();
-  //selectors
+  // selectors
   const auth = useSelector((state: RootState) => state.auth);
 
   return (
@@ -37,10 +37,10 @@ const Header = () => {
               {/* Search Bar DESKTOP */}
               <Navbar.Search.Desk />
               {/* User Menu: shortcuts, and logout */}
-              {auth?.user && <Navbar.UserMenu user={auth?.user} />}
+              {auth.user && <Navbar.UserMenu user={auth.user} />}
 
               {/* Login & Register Buttons */}
-              {!auth?.user && (
+              {!auth.user && (
                 <Group spacing="xs">
                   {/* Desktop btn */}
                   <Button

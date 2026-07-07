@@ -1,11 +1,11 @@
-//Hooks
+// Hooks
 import { useStyles } from "./styles";
-//Components
+// Components
 import { Link } from "react-router-dom";
-//UI Components
+// UI Components
 import Moment from "react-moment";
 import { Card, Text, Group, Center } from "@mantine/core";
-//Icons
+// Icons
 import { FaRegClock, FaHeart } from "react-icons/fa";
 import type { Memory } from "types";
 

@@ -1,4 +1,4 @@
-//UI Components
+// UI Components
 import { Text, Button, Modal, Group, Container } from "@mantine/core";
 
 interface DeleteProps {

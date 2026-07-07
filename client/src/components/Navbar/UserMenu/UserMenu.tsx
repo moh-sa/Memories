@@ -1,20 +1,20 @@
-//Hooks
+// Hooks
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useStyles } from "./styles";
-//Actions
+// Actions
 import { logout } from "store/auth/auth.thunk";
-//Components
+// Components
 import { Link } from "react-router-dom";
-//UI Components
+// UI Components
 import { Avatar, UnstyledButton, Text } from "@mantine/core";
 import { Menu, Divider, Group } from "@mantine/core";
-//Icons
+// Icons
 import { FaHeart } from "react-icons/fa";
 import { CgProfile } from "react-icons/cg";
 import { MdLibraryAdd, MdOutlineLibraryBooks } from "react-icons/md";
 import { TbLogout, TbChevronDown } from "react-icons/tb";
-//Types
+// Types
 import type { AppDispatch } from "store/store";
 import type { User } from "types";
 
@@ -36,8 +36,8 @@ const UserMenu = ({ user }: UserMenuProps) => {
       width={260}
       position="bottom-end"
       transition="pop-top-right"
-      onClose={() => setUserMenuOpened(false)}
-      onOpen={() => setUserMenuOpened(true)}
+      onClose={() => { setUserMenuOpened(false); }}
+      onOpen={() => { setUserMenuOpened(true); }}
     >
       <Menu.Target>
         <UnstyledButton

@@ -1,3 +1,3 @@
-export default async function descriptionHandler(data: string) {
-  return await data.replaceAll("\n", " ").substring(0, 100);
+export default function descriptionHandler(data: string) {
+  return data.replaceAll("\n", " ").substring(0, 100);
 }

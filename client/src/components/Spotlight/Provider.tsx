@@ -1,14 +1,14 @@
-//Hooks
+// Hooks
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-//Actions
+// Actions
 import { search, memory } from "services";
-//Components
+// Components
 import { SpotlightProvider } from "@mantine/spotlight";
-//Icons
+// Icons
 import { TbSearch, TbTag, TbHome } from "react-icons/tb";
 import { MdOutlineLibraryBooks } from "react-icons/md";
-//Types
+// Types
 import type { ReactNode } from "react";
 import type { SpotlightAction } from "@mantine/spotlight";
 
@@ -17,7 +17,7 @@ interface ProviderProps {
 }
 
 const Provider = ({ children }: ProviderProps) => {
-  //hooks
+  // hooks
   const navigate = useNavigate();
   const [actions, setActions] = useState<SpotlightAction[]>([]);
 
@@ -33,37 +33,40 @@ const Provider = ({ children }: ProviderProps) => {
       const titlesArr = titlesData.data.data.titles;
       const tagsArr = tagsData.data.data.tags;
 
-      const titlesObjs = titlesArr.map((title) => ({
+      const titlesObjs = titlesArr.map(title => ({
         title,
         description: "memory",
         group: "memories",
-        onTrigger: () => navigate(`/search?query=${title}`),
+        onTrigger: () => { navigate(`/search?query=${title}`); },
         icon: <MdOutlineLibraryBooks size={18} />,
       }));
-      const tagsObjs = tagsArr.map((tag) => ({
+      const tagsObjs = tagsArr.map(tag => ({
         title: tag,
         description: "tag",
         group: "tags",
-        onTrigger: () => navigate(`/search?tags=${tag}`),
+        onTrigger: () => { navigate(`/search?tags=${tag}`); },
         icon: <TbTag size={18} />,
       }));
 
       const home = {
         title: "Home",
         group: "main",
-        onTrigger: () => navigate(`/`),
+        onTrigger: () => { navigate(`/`); },
         icon: <TbHome size={18} />,
       };
       const data = [home, ...titlesObjs, ...tagsObjs];
 
       setActions(data);
-    } catch (error) {
+    }
+    catch (error) {
       console.log(error);
     }
   };
 
   useEffect(() => {
-    getData();
+    void (async () => {
+      await getData();
+    })();
   }, []);
 
   return (

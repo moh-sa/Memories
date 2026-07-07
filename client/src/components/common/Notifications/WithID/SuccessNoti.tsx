@@ -2,7 +2,7 @@ import { updateNotification } from "@mantine/notifications";
 import { TbCheck } from "react-icons/tb";
 
 const SuccessNoti = (id: string, title: string, message: string) => {
-  return updateNotification({
+  updateNotification({
     id,
     title,
     message,

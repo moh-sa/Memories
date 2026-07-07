@@ -1,8 +1,8 @@
-//Hooks
+// Hooks
 import { useStyles } from "./styes";
-//Components
+// Components
 import { Outlet } from "react-router-dom";
-//UI Components
+// UI Components
 import Header from "layouts/Navigation/Header/Header";
 import Footer from "layouts/Navigation/Footer/Footer";
 import { FloatingButton } from "components";

@@ -1,7 +1,7 @@
 import { API } from "./options";
 import type { GetSingleMemoryArg, RecommendationsResponse } from "types";
 
-//GET
+// GET
 const get = (data: GetSingleMemoryArg) =>
   API.get<RecommendationsResponse>(`/recommendations/${data._id}`);
 

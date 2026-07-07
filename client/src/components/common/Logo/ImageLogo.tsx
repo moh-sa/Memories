@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
 import { Image, Text, Box } from "@mantine/core";
 
-const URL =
-  "https://res.cloudinary.com/tno/image/upload/w_64,dpr_auto/3507564_xjt5qs.webp";
+const URL
+  = "https://res.cloudinary.com/tno/image/upload/w_64,dpr_auto/3507564_xjt5qs.webp";
 
 const ImageLogo = () => {
   return (

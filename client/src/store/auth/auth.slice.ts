@@ -23,29 +23,29 @@ const authSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      //REGISTER
-      //REGISTER
-      //LOGIN
+      // REGISTER
+      // REGISTER
+      // LOGIN
       .addCase(thunk.login.fulfilled, (state, action) => {
         state.user = action.payload;
       })
-      //LOGIN
-      //VERIFY TOKEN
+      // LOGIN
+      // VERIFY TOKEN
       .addCase(thunk.verifyToken.rejected, (state) => {
         state.user = null;
       })
       .addCase(thunk.verifyToken.fulfilled, (state, action) => {
         state.user = action.payload;
       })
-      //VERIFY TOKEN
-      //LOGOUT
+      // VERIFY TOKEN
+      // LOGOUT
       .addCase(thunk.logout.rejected, (state) => {
         state.user = null;
       })
       .addCase(thunk.logout.fulfilled, (state) => {
         state.user = null;
       });
-    //LOGOUT
+    // LOGOUT
   },
 });
 

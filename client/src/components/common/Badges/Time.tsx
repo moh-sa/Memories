@@ -1,7 +1,7 @@
-//UI Components
+// UI Components
 import Moment from "react-moment";
 import { Badge, Text } from "@mantine/core";
-//Icons
+// Icons
 import { FaClock } from "react-icons/fa";
 
 interface TimeBadgeProps {

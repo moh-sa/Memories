@@ -1,6 +1,6 @@
 import { createStyles } from "@mantine/core";
 
-export const useStyles = createStyles((_theme) => ({
+export const useStyles = createStyles(() => ({
   GridCol: {
     display: "flex",
     justifyContent: "center",

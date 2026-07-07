@@ -1,42 +1,44 @@
-//Hooks
+// Hooks
 import { useStyles } from "./styles";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useTitle } from "Hooks";
-//Actions
+// Actions
 import { recommendations } from "services";
 import { getSingle, like } from "store/memory/memory.thunk";
 import { getAll } from "store/comments/comments.thunk";
-//UI Components
+// UI Components
 import { Container, Grid, Divider } from "@mantine/core";
 import { Memory, Comments, Recommendations } from "layouts/MemoryDetails";
 import { Common } from "components";
-//Types
+// Types
 import type { AppDispatch, RootState } from "store/store";
 import type { ApiError, LikeMemoryArg, Memory as MemoryType } from "types";
 
 const Details = () => {
-  //Basic
+  // Basic
   const { classes } = useStyles();
   const { _id } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const { setTitle } = useTitle();
-  //useStates
+  // useStates
   const [recosData, setRecosData] = useState<MemoryType[] | null>(null);
-  //useSelectors
+  // useSelectors
   const { user } = useSelector((state: RootState) => state.auth);
   const { memory: memoryData } = useSelector((state: RootState) => state.memory);
   const { comments: commentsData } = useSelector(
-    (state: RootState) => state.comments
+    (state: RootState) => state.comments,
   );
-  //Checkers
+  // Checkers
   const isMemoryReady = memoryData !== null;
   const isCommentsReady = commentsData !== null;
   const isRecosReady = recosData !== null;
 
-  isMemoryReady && setTitle(memoryData.title);
+  if (isMemoryReady) {
+    setTitle(memoryData.title);
+  }
 
   const hanldeLike = async (data: LikeMemoryArg) => {
     await dispatch(like(data));
@@ -63,9 +65,13 @@ const Details = () => {
   };
 
   useEffect(() => {
-    getMemorys();
-    getComments();
-    getRecommendations();
+    void (async () => {
+      await Promise.all([
+        getMemorys(),
+        getComments(),
+        getRecommendations(),
+      ]);
+    })();
   }, [_id]);
 
   return (

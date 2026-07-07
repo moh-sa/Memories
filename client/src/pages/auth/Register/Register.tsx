@@ -1,41 +1,41 @@
-//Packages
+// Packages
 import { yupResolver } from "@hookform/resolvers/yup";
-//Hooks
+// Hooks
 import { useStyles } from "./styles";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { useTitle } from "Hooks";
-//Actions
+// Actions
 import { auth } from "services";
-//Components
+// Components
 import { Link } from "react-router-dom";
 import { FormProvider } from "react-hook-form";
-//UI Components
+// UI Components
 import { Button, List, Anchor, Paper } from "@mantine/core";
 import { Title, Text, Container, Stack } from "@mantine/core";
 import { Common } from "components";
-//Icons
+// Icons
 import { TbSend } from "react-icons/tb";
 import { FiUser } from "react-icons/fi";
 import { MdAlternateEmail } from "react-icons/md";
-//Validations
+// Validations
 import { registerSchema } from "rules";
-//Types
+// Types
 import type { AxiosError } from "axios";
 import type { FieldValues } from "react-hook-form";
 import type { ApiError, RegisterRequest } from "types";
 
 const Register = () => {
-  //hooks
+  // hooks
   const { classes } = useStyles();
   const navigate = useNavigate();
   const { setTitle } = useTitle();
-  //states
+  // states
   const [isLoading, setIsLoading] = useState(false);
   const [showResMsg, setShowResMsg] = useState(false);
   const [resMsg, setResMsg] = useState("");
-  //setTitle
+  // setTitle
   setTitle("Register");
 
   const methods = useForm({
@@ -65,16 +65,18 @@ const Register = () => {
       });
 
       methods.reset();
-    } catch (error) {
+    }
+    catch (error) {
       const err = error as AxiosError<ApiError>;
-      const msg =
-        err?.code === "ERR_NETWORK"
+      const msg
+        = err.code === "ERR_NETWORK"
           ? "Cannot connect to the server. Please check your connection."
-          : err?.response?.data?.message;
+          : err.response?.data.message;
 
       setResMsg(msg as string);
       setShowResMsg(true);
-    } finally {
+    }
+    finally {
       setIsLoading(false);
     }
   };
@@ -138,9 +140,9 @@ const Register = () => {
                   name="Avatar"
                   data={handleImageSelect}
                   err={
-                    methods.formState.errors?.cover?.message as
-                      | string
-                      | undefined
+                    methods.formState.errors.cover?.message as
+                    | string
+                    | undefined
                   }
                 />
               </Stack>

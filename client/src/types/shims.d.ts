@@ -5,10 +5,10 @@ declare module "@fvilers/disable-react-devtools";
 // `Bundler` moduleResolution TypeScript cannot discover them (TS7016).
 // Re-declare the module pointing at react-hook-form's `Resolver` type.
 declare module "@hookform/resolvers/yup" {
-  import type { FieldValues, Resolver } from "react-hook-form";
+  import type { Resolver } from "react-hook-form";
   export const yupResolver: (
     schema: object,
     schemaOptions?: object,
-    factoryOptions?: object
-  ) => Resolver<FieldValues>;
+    factoryOptions?: object,
+  ) => Resolver;
 }

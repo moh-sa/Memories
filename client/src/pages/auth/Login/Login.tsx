@@ -1,44 +1,51 @@
-//Packages
+// Packages
 import { loginSchema } from "rules";
 import { yupResolver } from "@hookform/resolvers/yup";
-//Hooks
+// Hooks
 import { useStyles } from "./styles";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useTitle } from "Hooks";
-//Actions
+// Actions
 import { login } from "store/auth/auth.thunk";
-//Components
+// Components
 import { Link } from "react-router-dom";
 import { FormProvider } from "react-hook-form";
-//UI Components
+// UI Components
 import { Button, Anchor, Paper } from "@mantine/core";
 import { Title, Text, Container, Stack } from "@mantine/core";
 import { Common } from "components";
-//Icons
+// Icons
 import { TbSend } from "react-icons/tb";
 import { MdAlternateEmail } from "react-icons/md";
-//Types
+// Types
 import type { FieldValues } from "react-hook-form";
 import type { AppDispatch } from "store/store";
 import type { ApiError, LoginRequest } from "types";
 
+interface LoginLocationState {
+  form?: { pathname?: string };
+  isRegister?: boolean;
+  message: string;
+}
+
 const Login = () => {
-  //hooks
+  // hooks
   const { classes } = useStyles();
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-  const { state } = useLocation();
+  const location = useLocation();
+  const state = location.state as LoginLocationState | null;
   const { setTitle } = useTitle();
-  //states
+  // states
   const [isLoading, setIsLoading] = useState(false);
   const [showResMsg, setShowResMsg] = useState(false);
   const [resMsg, setResMsg] = useState("");
-  //variables
+  // variables
   const form = state?.form?.pathname || "/";
-  //setTitle
+  // setTitle
   setTitle("Login");
 
   const methods = useForm({
@@ -56,13 +63,14 @@ const Login = () => {
     const errorPayload = payload as ApiError | undefined;
 
     if (errorPayload?.code || errorPayload?.statusCode) {
-      const msg =
-        errorPayload?.code === "ERR_NETWORK"
+      const msg
+        = errorPayload.code === "ERR_NETWORK"
           ? "Cannot connect to the server. Please check your connection."
-          : errorPayload?.message;
+          : errorPayload.message;
       setResMsg(msg as string);
       setShowResMsg(true);
-    } else {
+    }
+    else {
       navigate(form, { replace: true });
     }
 
@@ -79,14 +87,14 @@ const Login = () => {
           </Title>
           <Text color="dimmed" size="sm" align="center" mt={5}>
             <Anchor component={Link} to="/register" size="sm">
-              Don't have an account? Register
+              Don&apos;t have an account? Register
             </Anchor>
           </Text>
         </div>
         <Paper withBorder className={classes.paper}>
           {/* response message  */}
           {showResMsg && <Common.Alerts.Failure msg={resMsg} />}
-          {state?.isRegister && <Common.Alerts.Success msg={state?.message} />}
+          {state?.isRegister && <Common.Alerts.Success msg={state.message} />}
 
           <form onSubmit={methods.handleSubmit(onSubmit)}>
             {/* Form Context */}

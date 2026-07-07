@@ -1,5 +1,5 @@
 export default function base64Converter(
-  data: Blob
+  data: Blob,
 ): Promise<string | ArrayBuffer | null> {
   return new Promise((resolve) => {
     let baseURL: string | ArrayBuffer | null = "";
@@ -12,7 +12,7 @@ export default function base64Converter(
 
     reader.onload = () => {
       baseURL = reader.result;
-      return resolve(baseURL);
+      resolve(baseURL);
     };
   });
 }

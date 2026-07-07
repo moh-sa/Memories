@@ -22,13 +22,14 @@ export const getAll = createAsyncThunk<
   try {
     const { data } = await comments.getAll(_id);
     return data;
-  } catch (error) {
+  }
+  catch (error) {
     const errorData = axios.isAxiosError(error)
       ? (error.response?.data as ApiError | undefined)
       : undefined;
     if (errorData?.accessToken || errorData?.refreshToken) {
       thunkAPI.dispatch(removeUser());
-      await cookieDestroyer();
+      cookieDestroyer();
     }
     return thunkAPI.rejectWithValue(errorData ?? (error as ApiError));
   }
@@ -41,16 +42,17 @@ export const create = createAsyncThunk<
 >("comments/create", async (commentData, thunkAPI) => {
   try {
     const { data } = await comments.create(commentData);
-    const userData = await cookieExtractor(data.accessToken.data.accessToken);
+    const userData = cookieExtractor(data.accessToken.data.accessToken);
     thunkAPI.dispatch(addUser(userData));
     return data;
-  } catch (error) {
+  }
+  catch (error) {
     const errorData = axios.isAxiosError(error)
       ? (error.response?.data as ApiError | undefined)
       : undefined;
     if (errorData?.accessToken || errorData?.refreshToken) {
       thunkAPI.dispatch(removeUser());
-      await cookieDestroyer();
+      cookieDestroyer();
     }
     return thunkAPI.rejectWithValue(errorData ?? (error as ApiError));
   }
@@ -63,16 +65,17 @@ export const update = createAsyncThunk<
 >("comments/update", async (commentData, thunkAPI) => {
   try {
     const { data } = await comments.update(commentData);
-    const userData = await cookieExtractor(data.accessToken.data.accessToken);
+    const userData = cookieExtractor(data.accessToken.data.accessToken);
     thunkAPI.dispatch(addUser(userData));
     return data;
-  } catch (error) {
+  }
+  catch (error) {
     const errorData = axios.isAxiosError(error)
       ? (error.response?.data as ApiError | undefined)
       : undefined;
     if (errorData?.accessToken || errorData?.refreshToken) {
       thunkAPI.dispatch(removeUser());
-      await cookieDestroyer();
+      cookieDestroyer();
     }
     return thunkAPI.rejectWithValue(errorData ?? (error as ApiError));
   }
@@ -85,16 +88,17 @@ export const _delete = createAsyncThunk<
 >("comments/delete", async (_id, thunkAPI) => {
   try {
     const { data } = await comments._delete(_id);
-    const userData = await cookieExtractor(data.accessToken.data.accessToken);
+    const userData = cookieExtractor(data.accessToken.data.accessToken);
     thunkAPI.dispatch(addUser(userData));
     return _id;
-  } catch (error) {
+  }
+  catch (error) {
     const errorData = axios.isAxiosError(error)
       ? (error.response?.data as ApiError | undefined)
       : undefined;
     if (errorData?.accessToken || errorData?.refreshToken) {
       thunkAPI.dispatch(removeUser());
-      await cookieDestroyer();
+      cookieDestroyer();
     }
     return thunkAPI.rejectWithValue(errorData ?? (error as ApiError));
   }
@@ -108,13 +112,14 @@ export const like = createAsyncThunk<
   try {
     const { data } = await comments.like(likeData);
     return data;
-  } catch (error) {
+  }
+  catch (error) {
     const errorData = axios.isAxiosError(error)
       ? (error.response?.data as ApiError | undefined)
       : undefined;
     if (errorData?.accessToken || errorData?.refreshToken) {
       thunkAPI.dispatch(removeUser());
-      await cookieDestroyer();
+      cookieDestroyer();
     }
     return thunkAPI.rejectWithValue(errorData ?? (error as ApiError));
   }

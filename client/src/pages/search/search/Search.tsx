@@ -1,16 +1,16 @@
-//Hooks
+// Hooks
 import { useState, useEffect } from "react";
 import { useStyles } from "./styles";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { useTitle, useLocalStorage } from "Hooks";
-//Actions
+// Actions
 import { searchReq, like, _delete } from "store/memories/memories.thunk";
-//UI Components
+// UI Components
 import { Common, MainPage } from "components";
 import { Container, Title, Text, Button } from "@mantine/core";
-//Types
+// Types
 import type { AppDispatch, RootState } from "store/store";
 import type {
   ApiError,
@@ -21,7 +21,7 @@ import type {
 } from "types";
 
 const Search = () => {
-  //Hookes
+  // Hookes
   const { classes } = useStyles();
   const dispatch = useDispatch<AppDispatch>();
   const { set } = useLocalStorage();
@@ -29,24 +29,28 @@ const Search = () => {
   const { search } = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
   const { setTitle } = useTitle();
-  //states
+  // states
   const [isLoading, setIsLoading] = useState(true);
-  //Selectors
+  // Selectors
   const data = useSelector((state: RootState) => state.memories);
   const { user } = useSelector((state: RootState) => state.auth);
-  //Variables
+  // Variables
   const getQuery = searchParams.get("query");
   const getTags = searchParams.get("tags");
   const getPage = searchParams.get("page");
   const currentPage = getPage ? getPage : 1;
-  //Checkers
-  const isReady = data?.memories !== null;
-  const isExists = (data?.memories?.length as number) > 0;
-  //setTitle
-  getQuery && setTitle(`${getQuery} search results`);
-  getTags && setTitle(`${getTags} search results`);
+  // Checkers
+  const isReady = data.memories !== null;
+  const isExists = (data.memories?.length as number) > 0;
+  // setTitle
+  if (getQuery) {
+    setTitle(`${getQuery} search results`);
+  }
+  if (getTags) {
+    setTitle(`${getTags} search results`);
+  }
 
-  const handleOnPageChange = async (data: number) => {
+  const handleOnPageChange = (data: number) => {
     setSearchParams({ page: data as unknown as string });
   };
 
@@ -71,7 +75,7 @@ const Search = () => {
     const { payload } = await dispatch(searchReq({ page, query, tags }));
     const errorPayload = payload as ApiError | undefined;
     if (errorPayload?.statusCode === 404) {
-      navigate(`/${errorPayload?.statusCode}`, {
+      navigate(`/${errorPayload.statusCode}`, {
         state: { code: errorPayload.statusCode, msg: errorPayload.message },
       });
     }
@@ -80,18 +84,25 @@ const Search = () => {
   };
 
   useEffect(() => {
-    if (!search || (!getTags && !getQuery)) {
-      navigate("/");
-    } else {
-      getSearchResults(currentPage);
-    }
+    void (async () => {
+      if (!search || (!getTags && !getQuery)) {
+        navigate("/");
+      }
+      else {
+        await getSearchResults(currentPage);
+      }
+    })();
   }, [currentPage, search]);
 
   return (
     <section className={classes.section}>
       <Container size="xl">
         <Title order={3} my="md">
-          {getQuery} {getTags} Search Results
+          {getQuery}
+          {" "}
+          {getTags}
+          {" "}
+          Search Results
         </Title>
         {isLoading && <Common.LoadingOverlay />}
         {isReady && !isExists && (
@@ -100,7 +111,7 @@ const Search = () => {
             <Text>
               The requested search cannot be found. Please try something else.
             </Text>
-            <Button onClick={() => navigate(-1)} mt="md">
+            <Button onClick={() => { navigate(-1); }} mt="md">
               Go Back
             </Button>
           </div>

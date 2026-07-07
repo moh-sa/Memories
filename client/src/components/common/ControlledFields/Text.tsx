@@ -42,9 +42,9 @@ const Text = ({
           placeholder={holder}
           description={desc}
           icon={icon}
-          error={errors?.[name]?.message as string | undefined}
+          error={errors[name]?.message as string | undefined}
           onBlur={(e) => {
-            trigger(e.target.name);
+            void trigger(e.target.name);
             (field.onBlur as (event: unknown) => void)(e);
           }}
         />

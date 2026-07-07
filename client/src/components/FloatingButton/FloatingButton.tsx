@@ -1,14 +1,14 @@
-//Hooks
+// Hooks
 import type { CSSProperties } from "react";
 import { useSelector } from "react-redux";
-//Components
+// Components
 import { Link } from "react-router-dom";
-//UI Components
+// UI Components
 import { Button } from "@mantine/core";
-//Icons
+// Icons
 import { MdLibraryAdd } from "react-icons/md";
 import type { RootState } from "store/store";
-//Styles
+// Styles
 import "./styles.css";
 
 const FloatingButton = () => {

@@ -17,8 +17,9 @@ export const login = createAsyncThunk<
 >("auth/login", async (userData, thunkAPI) => {
   try {
     const { data } = await auth.login(userData);
-    return await cookieExtractor(data.data.accessToken);
-  } catch (error) {
+    return cookieExtractor(data.data.accessToken);
+  }
+  catch (error) {
     if (axios.isAxiosError(error)) {
       return thunkAPI.rejectWithValue(error.response?.data as ApiError);
     }
@@ -34,7 +35,8 @@ export const register = createAsyncThunk<
   try {
     const { data } = await auth.register(userData);
     return data;
-  } catch (error) {
+  }
+  catch (error) {
     if (axios.isAxiosError(error)) {
       return thunkAPI.rejectWithValue(error.response?.data as ApiError);
     }
@@ -44,14 +46,15 @@ export const register = createAsyncThunk<
 
 export const logout = createAsyncThunk<
   MessageResponse,
-  void,
+  undefined,
   { rejectValue: ApiError }
 >("auth/logout", async (_, thunkAPI) => {
   try {
-    await cookieDestroyer();
+    cookieDestroyer();
     const { data } = await auth.logout();
     return data;
-  } catch (error) {
+  }
+  catch (error) {
     if (axios.isAxiosError(error)) {
       return thunkAPI.rejectWithValue(error.response?.data as ApiError);
     }
@@ -61,13 +64,14 @@ export const logout = createAsyncThunk<
 
 export const verifyToken = createAsyncThunk<
   User,
-  void,
+  undefined,
   { rejectValue: ApiError }
 >("auth/verifyToken", async (_, thunkAPI) => {
   try {
     const { data } = await auth.verifyToken();
-    return await cookieExtractor(data.data.accessToken);
-  } catch (error) {
+    return cookieExtractor(data.data.accessToken);
+  }
+  catch (error) {
     if (axios.isAxiosError(error)) {
       return thunkAPI.rejectWithValue(error.response?.data as ApiError);
     }

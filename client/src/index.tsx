@@ -12,7 +12,11 @@ if (import.meta.env.PROD) {
   disableReactDevTools();
 }
 
-const root = ReactDOM.createRoot(document.getElementById("root")!);
+const container = document.getElementById("root");
+if (!container) {
+  throw new Error("Root element \"#root\" was not found in the document.");
+}
+const root = ReactDOM.createRoot(container);
 root.render(
   <React.StrictMode>
     <BrowserRouter>
@@ -25,5 +29,5 @@ root.render(
         </MantineProviders>
       </ReduxProvider>
     </BrowserRouter>
-  </React.StrictMode>
+  </React.StrictMode>,
 );

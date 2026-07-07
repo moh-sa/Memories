@@ -1,10 +1,10 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import Main from "layouts/Main/Main";
-//Public Components
+// Public Components
 import { Home, Missing, Auth } from "pages";
-//Protected Components
+// Protected Components
 import { Memory, User, Search } from "pages";
-//Controll Access
+// Controll Access
 import RequireAuth from "components/Auth/RequireAuth";
 import { PersistLogin, NotRequireAuth } from "components/Auth";
 

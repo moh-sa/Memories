@@ -1,6 +1,6 @@
-//Components
+// Components
 import { Link } from "react-router-dom";
-//UI Components
+// UI Components
 import { Group, Avatar, Text, Box } from "@mantine/core";
 
 interface UserInfoProps {

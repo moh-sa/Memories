@@ -1,13 +1,13 @@
-//Hooks
+// Hooks
 import { useStyles } from "./styles";
 import { useState } from "react";
-//Components
+// Components
 import { Link } from "react-router-dom";
-//UI Components
+// UI Components
 import { Common } from "components";
 import { UserInfo } from "./subComponents";
 import { Card, Text, Image, Button, Box, Anchor } from "@mantine/core";
-//Icons
+// Icons
 import { TbEdit, TbTrash } from "react-icons/tb";
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 import type {
@@ -25,16 +25,16 @@ interface MemoryCardProps {
 }
 
 const Memory = ({ data, user, like, edit, _delete }: MemoryCardProps) => {
-  //Hooks
+  // Hooks
   const { classes } = useStyles();
-  //Stats
+  // Stats
   const [isModelOpened, setIsModelOpened] = useState(false);
-  //Checkers
+  // Checkers
   const isLoggedIn = user._id !== undefined;
   const isAuthor = data.author._id === user._id;
   const isAdmin = user.role === "admin";
 
-  const tags = data.tags.map((tag) => (
+  const tags = data.tags.map(tag => (
     <Text
       size="sm"
       color="dimmed"
@@ -46,13 +46,15 @@ const Memory = ({ data, user, like, edit, _delete }: MemoryCardProps) => {
     </Text>
   ));
 
-  const likeIcon = data.likes.includes(user._id as string) ? (
-    <AiFillHeart size={18} color="red" />
-  ) : (
-    <AiOutlineHeart size={18} color="red" />
-  );
+  const likeIcon = data.likes.includes(user._id as string)
+    ? (
+        <AiFillHeart size={18} color="red" />
+      )
+    : (
+        <AiOutlineHeart size={18} color="red" />
+      );
 
-  const handleDelete = async () => {
+  const handleDelete = () => {
     const delData = { _id: data._id, public_id: data.cover };
     _delete(delData);
     setIsModelOpened(false);
@@ -122,11 +124,9 @@ const Memory = ({ data, user, like, edit, _delete }: MemoryCardProps) => {
             <Text>
               {data.description}
               {" ..."}
-              {
-                <Anchor component={Link} to={`/memory/${data._id}`}>
-                  read more
-                </Anchor>
-              }
+              <Anchor component={Link} to={`/memory/${data._id}`}>
+                read more
+              </Anchor>
             </Text>
           </div>
 
@@ -144,16 +144,14 @@ const Memory = ({ data, user, like, edit, _delete }: MemoryCardProps) => {
               fullWidth
               variant="light"
               color="pink"
-              onClick={() =>
-                like({ _id: data._id, userId: user._id, type: "card" })
-              }
+              onClick={() => { like({ _id: data._id, userId: user._id, type: "card" }); }}
             >
               {likeIcon}
             </Button>
 
             {/* Edit Button */}
             {(isAuthor || isAdmin) && (
-              <Button fullWidth variant="light" onClick={() => edit(data)}>
+              <Button fullWidth variant="light" onClick={() => { edit(data); }}>
                 <TbEdit size={18} />
               </Button>
             )}
@@ -163,7 +161,7 @@ const Memory = ({ data, user, like, edit, _delete }: MemoryCardProps) => {
               <Button
                 variant="light"
                 color="yellow"
-                onClick={() => setIsModelOpened(true)}
+                onClick={() => { setIsModelOpened(true); }}
               >
                 <TbTrash size={18} color="orange" />
               </Button>
@@ -173,7 +171,7 @@ const Memory = ({ data, user, like, edit, _delete }: MemoryCardProps) => {
       </Card>
       <Common.Modals.Delete
         open={isModelOpened}
-        close={() => setIsModelOpened(false)}
+        close={() => { setIsModelOpened(false); }}
         yes={handleDelete}
       />
     </>

@@ -1,11 +1,11 @@
-//Hooks
+// Hooks
 import { useState, useEffect } from "react";
-//Actions
+// Actions
 import { memory } from "services";
-//UI Components
+// UI Components
 import { MultiSelect } from "@mantine/core";
 import { useFormContext, Controller } from "react-hook-form";
-//Icons
+// Icons
 import { TbTags } from "react-icons/tb";
 
 const Tags = ({ initalValue = [] }: { initalValue?: string[] }) => {
@@ -23,15 +23,19 @@ const Tags = ({ initalValue = [] }: { initalValue?: string[] }) => {
     try {
       const { data } = await memory.getTags();
       setTags(data.data.tags);
-    } catch (error) {
+    }
+    catch (error) {
       console.log(error);
-    } finally {
+    }
+    finally {
       setIsLoading(false);
     }
   };
 
   useEffect(() => {
-    handleGetTags();
+    void (async () => {
+      await handleGetTags();
+    })();
   }, []);
 
   return (
@@ -42,29 +46,29 @@ const Tags = ({ initalValue = [] }: { initalValue?: string[] }) => {
       render={({ field }) => (
         <MultiSelect
           required
-          clearable //add a X button on the right to clear the field.
-          creatable //the ability to add new tags
-          searchable //the ability to search for a certain tag
+          clearable // add a X button on the right to clear the field.
+          creatable // the ability to add new tags
+          searchable // the ability to search for a certain tag
           disabled={isLoading}
           name={field.name}
           label="Tags"
           placeholder="Select or enter 3 tags"
           description="Select at least one tag"
           icon={<TbTags size={18} />}
-          data={tags} //take an array of data to auto complete
-          limit={5} //number of suggestions at the same time
-          maxSelectedValues={3} //max number of tags
+          data={tags} // take an array of data to auto complete
+          limit={5} // number of suggestions at the same time
+          maxSelectedValues={3} // max number of tags
           maxDropdownHeight={160}
           clearButtonLabel="Clear selection"
-          getCreateLabel={(query) => `+ Create ${query}`} //text shown when adding new tag
-          error={errors?.tags?.message as string | undefined}
+          getCreateLabel={query => `+ Create ${query}`} // text shown when adding new tag
+          error={errors.tags?.message as string | undefined}
           onBlur={(e) => {
-            trigger("tags");
+            void trigger("tags");
             (field.onBlur as (event: unknown) => void)(e);
           }}
-          onChange={(e) => field.onChange(e)}
-          ref={(e) => field.ref(e)}
-          value={((e: unknown) => field.value(e)) as unknown as string[]}
+          onChange={(e) => { field.onChange(e); }}
+          ref={(e) => { field.ref(e); }}
+          value={((e: unknown) => (field.value as (arg: unknown) => string[])(e)) as unknown as string[]}
         />
       )}
     />

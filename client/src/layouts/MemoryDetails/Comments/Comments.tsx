@@ -1,4 +1,4 @@
-//UI Components
+// UI Components
 import { Comments as CommentsComp } from "components";
 import type { Comment, User } from "types";
 

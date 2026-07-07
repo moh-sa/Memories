@@ -1,12 +1,12 @@
-//hooks
+// hooks
 import { useStyles } from "./styles";
-//Components
+// Components
 import { openSpotlight } from "@mantine/spotlight";
-//UI Components
+// UI Components
 import { ActionIcon } from "@mantine/core";
-//Icons
+// Icons
 import { TbSearch } from "react-icons/tb";
-//Types
+// Types
 import type { MouseEventHandler } from "react";
 
 const Mob = () => {

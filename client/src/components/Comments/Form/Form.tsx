@@ -1,6 +1,6 @@
-//Packages
+// Packages
 import { yupResolver } from "@hookform/resolvers/yup";
-//Hooks
+// Hooks
 import { useStyles } from "./styles";
 import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
@@ -8,14 +8,14 @@ import { useForm, FormProvider, type FieldValues } from "react-hook-form";
 import { useLocalStorage, useDisclosure } from "@mantine/hooks";
 import type { AppDispatch } from "store/store";
 import type { Comment, User } from "types";
-//Actions
+// Actions
 import { create, update } from "store/comments/comments.thunk";
-//rules
+// rules
 import { commentSchema } from "rules";
-//UI Components
+// UI Components
 import { Common } from "components";
 import { Text, Paper, Group, Button } from "@mantine/core";
-//Icons
+// Icons
 import { TbPlus, TbSend, TbX } from "react-icons/tb";
 
 interface FormProps {
@@ -24,31 +24,35 @@ interface FormProps {
 }
 
 const Form = ({ memoryId, user }: FormProps) => {
-  //hooks
+  // hooks
   const { classes } = useStyles();
   const dispatch = useDispatch<AppDispatch>();
   const [state, handlers] = useDisclosure(false);
   const [localValue, setLocalValue] = useLocalStorage<Comment | null>({
     key: "editComment",
   });
-  //states
+  // states
   const [isLoading, setIsLoading] = useState(false);
-  //checkers
+  // checkers
   const isEdit = localValue ? true : false;
-  //useForm
+  // useForm
   const methods = useForm({ resolver: yupResolver(commentSchema) });
 
   const handleOnSubmit = async (data: FieldValues) => {
     setIsLoading(true);
 
     if (!isEdit) {
-      const commentData = { body: data.comment, author: user._id, memoryId };
+      const commentData = { body: data.comment as string, author: user._id, memoryId };
 
       await dispatch(create(commentData));
-    } else {
-      (localValue as Comment).body = data.comment;
+    }
+    else {
+      const updatedComment = {
+        ...(localValue as Comment),
+        body: data.comment as string,
+      };
 
-      await dispatch(update(localValue));
+      await dispatch(update(updatedComment));
 
       setLocalValue(null);
     }
@@ -76,7 +80,7 @@ const Form = ({ memoryId, user }: FormProps) => {
           color={state ? "red" : "blue"}
           compact={state}
           fullWidth={!state}
-          onClick={() => handlers.toggle()}
+          onClick={() => { handlers.toggle(); }}
         >
           {state && <TbX size={15} />}
           {!state && (
@@ -90,7 +94,7 @@ const Form = ({ memoryId, user }: FormProps) => {
         </Button>
       </Group>
       {state && (
-        <form onSubmit={methods.handleSubmit((e) => handleOnSubmit(e))}>
+        <form onSubmit={methods.handleSubmit(e => handleOnSubmit(e))}>
           <div className={classes.form}>
             <FormProvider {...methods}>
               {/* Textarea */}

@@ -1,4 +1,4 @@
-//UI Components
+// UI Components
 import type { ComponentProps } from "react";
 import { Common } from "components";
 import { Title, Center, ScrollArea } from "@mantine/core";
@@ -10,10 +10,10 @@ interface ListProps {
 }
 
 const List = ({ data, user }: ListProps) => {
-  //Checkers
+  // Checkers
   const isLoggedIn = !!user;
-  //Data Array
-  const comments = data.map((comment) => (
+  // Data Array
+  const comments = data.map(comment => (
     <Common.Cards.Comment key={comment._id} data={comment} user={user} />
   ));
   return (

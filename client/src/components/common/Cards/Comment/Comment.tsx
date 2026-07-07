@@ -1,16 +1,16 @@
-//Hooks
+// Hooks
 import { useStyles } from "./styles";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useLocalStorage } from "@mantine/hooks";
-//Actions
+// Actions
 import { like, _delete } from "store/comments/comments.thunk";
-//Components
+// Components
 import Moment from "react-moment";
-//UI Components
+// UI Components
 import { Comments, Common } from "components";
 import { Paper, Text, Avatar, Group, Stack, ActionIcon } from "@mantine/core";
-//Icons
+// Icons
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 import type { AppDispatch } from "store/store";
 import type { Comment as CommentType, User } from "types";
@@ -21,31 +21,33 @@ interface CommentCardProps {
 }
 
 const Comment = ({ data, user }: CommentCardProps) => {
-  //Hooks
+  // Hooks
   const { classes } = useStyles();
   const dispatch = useDispatch<AppDispatch>();
   const [, setLocal] = useLocalStorage<CommentType | null>({
     key: "editComment",
   });
-  //Stats
+  // Stats
   const [isModelOpened, setIsModelOpened] = useState(false);
-  //Checkers
+  // Checkers
   const isLoggedIn = user !== null;
   let isAuthor;
   let isAdmin;
   let likeIcon;
 
   if (isLoggedIn) {
-    isAuthor = data.author._id === (user as User)._id;
-    isAdmin = (user as User).role === "admin";
-    likeIcon = data.likes.includes((user as User)._id) ? (
-      <AiFillHeart size={18} color="red" />
-    ) : (
-      <AiOutlineHeart size={18} color="red" />
-    );
+    isAuthor = data.author._id === (user)._id;
+    isAdmin = (user).role === "admin";
+    likeIcon = data.likes.includes((user)._id)
+      ? (
+          <AiFillHeart size={18} color="red" />
+        )
+      : (
+          <AiOutlineHeart size={18} color="red" />
+        );
   }
 
-  const handleEdit = async () => {
+  const handleEdit = () => {
     setLocal(data);
   };
 
@@ -81,7 +83,7 @@ const Comment = ({ data, user }: CommentCardProps) => {
           {isLoggedIn && (isAuthor || isAdmin) && (
             <Comments.OptionsButton
               edit={handleEdit}
-              _delete={() => setIsModelOpened(true)}
+              _delete={() => { setIsModelOpened(true); }}
             />
           )}
         </Group>
@@ -94,7 +96,9 @@ const Comment = ({ data, user }: CommentCardProps) => {
             )}
             {/* Number of Likes */}
             <Text size="sm" color="dimmed">
-              {data.likes?.length} likes
+              {data.likes.length}
+              {" "}
+              likes
             </Text>
           </Stack>
           <Text className={classes.content}>{data.body}</Text>
@@ -102,7 +106,7 @@ const Comment = ({ data, user }: CommentCardProps) => {
       </Paper>
       <Common.Modals.Delete
         open={isModelOpened}
-        close={() => setIsModelOpened(false)}
+        close={() => { setIsModelOpened(false); }}
         yes={handleDelete}
       />
     </>

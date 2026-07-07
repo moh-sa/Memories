@@ -1,20 +1,20 @@
-//Hooks
+// Hooks
 import { useStyles } from "./styles";
 import { useState, useEffect } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { useInterval } from "@mantine/hooks";
 import { useTitle } from "Hooks";
-//Axios
+// Axios
 import { auth } from "services";
-//UI Components
+// UI Components
 import { Container, Loader, Title, Text } from "@mantine/core";
-//Icons
+// Icons
 import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";
-//Types
+// Types
 import type { AxiosError } from "axios";
-//Vatiables
-const uuidRegex =
-  /^[0-9A-F]{8}-[0-9A-F]{4}-[4][0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i;
+// Vatiables
+const uuidRegex
+  = /^[0-9A-F]{8}-[0-9A-F]{4}-[4][0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i;
 
 const pending = {
   status: "pending",
@@ -37,16 +37,18 @@ const success = {
 };
 
 const Activation = () => {
-  //hoks
+  // hoks
   const { classes } = useStyles();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const interval = useInterval(() => navigate("/login", success), 5000);
+  const interval = useInterval(() => {
+    navigate("/login", success);
+  }, 5000);
   const { setTitle } = useTitle();
-  //states
+  // states
   const [res, setRes] = useState(pending);
   const [isSuccess, setIsSuccess] = useState(false);
-  //setTitle
+  // setTitle
   setTitle("Account Activation");
 
   const code = searchParams.get("code");
@@ -74,7 +76,8 @@ const Activation = () => {
     const isCodeValid = uuidRegex.test(code as string);
 
     if (!isCodeValid) {
-      return setRes(failure);
+      setRes(failure);
+      return;
     }
 
     try {
@@ -87,17 +90,25 @@ const Activation = () => {
       });
 
       setIsSuccess(true);
-    } catch (error) {
-      return setRes({
+    }
+    catch (error) {
+      const axiosError = error as AxiosError<{ message: string }>;
+      if (!axiosError.response) {
+        throw error;
+      }
+      setRes({
         status: "failure",
         title: "Uh Oh!",
-        msg: (error as AxiosError<{ message: string }>).response!.data.message,
+        msg: axiosError.response.data.message,
       });
+      return;
     }
   };
 
   useEffect(() => {
-    verifyCode();
+    void (async () => {
+      await verifyCode();
+    })();
   }, []);
 
   useEffect(() => {

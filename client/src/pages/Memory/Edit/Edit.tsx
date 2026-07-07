@@ -1,6 +1,6 @@
-//Packages
+// Packages
 import { yupResolver } from "@hookform/resolvers/yup";
-//Hooks
+// Hooks
 import { useStyles } from "./styles";
 import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
@@ -8,37 +8,41 @@ import { useNavigate, Navigate } from "react-router-dom";
 import { useForm, FormProvider } from "react-hook-form";
 import type { FieldValues } from "react-hook-form";
 import { useTitle, useLocalStorage } from "Hooks";
-//Actions
+// Actions
 import { update } from "store/memories/memories.thunk";
-//Helpers
+// Helpers
 import { tagsHandler, descriptionHandler } from "helpers";
-//rules
+// rules
 import { memorySchema } from "rules";
-//UI Components
+// UI Components
 import { Common } from "components";
 import { Stack, Paper, Button, Title, Container } from "@mantine/core";
-//Icons
+// Icons
 import { TbPencil, TbSend } from "react-icons/tb";
-//Types
+// Types
 import type { AppDispatch } from "store/store";
 import type { Memory, MemoryMutationResponse } from "types";
 
 const Create = () => {
-  //Hookes
+  // Hookes
   const { classes } = useStyles();
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const { get, remove } = useLocalStorage();
   const { setTitle } = useTitle();
-  //States
-  const [editData] = useState<Memory>(get<Memory>("editMemory") as Memory);
+  // States
+  const [editData] = useState<Memory | null>(
+    get("editMemory") as Memory | null,
+  );
   const [isLoading, setIsLoading] = useState(false);
-  //useForm
+  // useForm
   const methods = useForm({
     resolver: yupResolver(memorySchema.edit),
   });
-  //setTitle
-  editData && setTitle(`edit ${editData.title}`);
+  // setTitle
+  if (editData) {
+    setTitle(`edit ${editData.title}`);
+  }
 
   const handleBodyOnChange = (e: { body: string; description: string }) => {
     methods.setValue("body", e.body);
@@ -46,16 +50,20 @@ const Create = () => {
   };
 
   const handleOnSubmit = async (e: FieldValues) => {
+    if (!editData) return;
+
     setIsLoading(true);
 
-    editData.title = e.title;
-    editData.description = await descriptionHandler(e.description);
-    editData.tags = await tagsHandler(e.tags);
-    editData.body = e.body;
-    editData.title = e.title;
-    delete editData.coverURL;
+    const updatedMemory: Memory = {
+      ...editData,
+      title: e.title as string,
+      description: descriptionHandler(e.description as string),
+      tags: tagsHandler(e.tags as string[]),
+      body: e.body as string,
+    };
+    delete updatedMemory.coverURL;
 
-    const { payload } = await dispatch(update(editData));
+    const { payload } = await dispatch(update(updatedMemory));
     const successPayload = payload as MemoryMutationResponse | undefined;
     if (successPayload?.memory) {
       remove("editMemory");
@@ -78,7 +86,7 @@ const Create = () => {
 
   return (
     <section className={classes.section}>
-      {!editData && <Navigate to={"/"} />}
+      {!editData && <Navigate to="/" />}
       {editData && (
         <Container size="xs">
           <Title align="center" className={classes.title}>
@@ -95,22 +103,22 @@ const Create = () => {
                     label="Title"
                     holder="Your memory's title"
                     icon={<TbPencil />}
-                    //initalValue={isEdit && get("editMemory").title}
+                    // initalValue={isEdit && get("editMemory").title}
                   />
                   {/* Tags */}
                   <Common.ControlledFields.Tags
-                  //initalValue={isEdit && get("editMemory").tags}
+                  // initalValue={isEdit && get("editMemory").tags}
                   />
                   {/* Body */}
                   <div>
                     <Common.UncontrolledFields.RichTextEditor.Memory
                       data={handleBodyOnChange}
                       err={
-                        methods.formState.errors?.body?.message as
-                          | string
-                          | undefined
+                        methods.formState.errors.body?.message as
+                        | string
+                        | undefined
                       }
-                      initalValue={editData && editData.body}
+                      initalValue={editData.body}
                     />
                   </div>
                 </Stack>

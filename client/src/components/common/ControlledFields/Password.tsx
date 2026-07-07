@@ -31,9 +31,9 @@ const Password = ({ name, label, holder, desc }: PasswordProps) => {
           placeholder={holder}
           description={desc}
           icon={<RiLockPasswordLine />}
-          error={errors?.[name]?.message as string | undefined}
+          error={errors[name]?.message as string | undefined}
           onBlur={(e) => {
-            trigger(e.target.name);
+            void trigger(e.target.name);
             (field.onBlur as (event: unknown) => void)(e);
           }}
         />

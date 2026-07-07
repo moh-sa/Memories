@@ -1,10 +1,10 @@
 import getCookie from "./getCookie";
 import decodeJWT from "./decodeJWT";
 
-export default async function cookieExtractor(name: string) {
-  const cookieContent = await getCookie(name);
+export default function cookieExtractor(name: string) {
+  const cookieContent = getCookie(name);
 
-  const decodedToken = await decodeJWT(cookieContent);
+  const decodedToken = decodeJWT(cookieContent);
 
   return decodedToken;
 }

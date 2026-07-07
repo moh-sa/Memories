@@ -1,43 +1,43 @@
-//Hooks
+// Hooks
 import { useStyles } from "./styles";
 import { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useTitle } from "Hooks";
-//Actions
+// Actions
 import { user } from "services";
-//Components
+// Components
 import Moment from "react-moment";
-//UI Components
+// UI Components
 import { Common } from "components";
 import { Container, Indicator, Grid, Title } from "@mantine/core";
 import { Avatar, Text, Button, Badge, Group } from "@mantine/core";
-//Icons
+// Icons
 import { FaClock } from "react-icons/fa";
 import { AiFillHeart } from "react-icons/ai";
 import { FaComments } from "react-icons/fa";
 import { MdLibraryBooks } from "react-icons/md";
-//Types
+// Types
 import type { ReactNode } from "react";
 import type { ProfileResponse } from "types";
-//Variables
+// Variables
 const indiStyles = {
   0: { margin: "0 auto" },
   1: { indicator: { backgroundColor: "transparent" } },
 };
 
 const Profile = () => {
-  //hooks
+  // hooks
   const { classes } = useStyles();
   const { username } = useParams();
   const navigate = useNavigate();
   const { setTitle } = useTitle();
-  //states
+  // states
   const [profData, setProfData] = useState<ProfileResponse["data"] | null>(
-    null
+    null,
   );
   const [isLoading, setIsLoading] = useState(true);
   const [isExists, setIsExists] = useState(false);
-  //variables
+  // variables
   const avatar = (
     <Avatar
       radius="sm"
@@ -46,7 +46,7 @@ const Profile = () => {
       alt={`${username}'s avatar`}
     />
   );
-  //setTitle
+  // setTitle
   setTitle(`${username} profile`);
 
   const getProfile = async () => {
@@ -55,16 +55,20 @@ const Profile = () => {
       const { data } = await user.getProfile({ username });
       setProfData(data.data);
       setIsExists(true);
-    } catch (error) {
+    }
+    catch (error) {
       console.log(error);
       setIsExists(false);
-    } finally {
+    }
+    finally {
       setIsLoading(false);
     }
   };
 
   useEffect(() => {
-    getProfile();
+    void (async () => {
+      await getProfile();
+    })();
   }, [username]);
 
   return (
@@ -78,7 +82,7 @@ const Profile = () => {
               "We didn't find the requested username.\nPlease check and try again."
             }
           </Text>
-          <Button onClick={() => navigate(-1)} mt="md">
+          <Button onClick={() => { navigate(-1); }} mt="md">
             Go Back
           </Button>
         </div>
@@ -86,7 +90,8 @@ const Profile = () => {
       {profData && isExists && (
         <Container>
           <Title order={3} mb="md">
-            {username}'s Profile
+            {username}
+            &apos;s Profile
           </Title>
           <div style={{ textAlign: "center" }}>
             <Group>
@@ -160,7 +165,9 @@ const GridButton = ({
         to={plural === "Comments" ? "" : plural}
         disabled={plural === "Comments"}
       >
-        {data} {data === 1 ? singular : plural}
+        {data}
+        {" "}
+        {data === 1 ? singular : plural}
       </Button>
     </Grid.Col>
   );
@@ -169,7 +176,9 @@ const GridButton = ({
 const Label = ({ date }: { date: string }) => {
   return (
     <Badge color="green" leftSection={<FaClock />}>
-      Since <Moment format="YYYY/MM/DD">{date}</Moment>
+      Since
+      {" "}
+      <Moment format="YYYY/MM/DD">{date}</Moment>
     </Badge>
   );
 };

@@ -1,4 +1,4 @@
-//UI Components
+// UI Components
 import { Pagination as PaginationCom } from "@mantine/core";
 
 interface PaginationProps {

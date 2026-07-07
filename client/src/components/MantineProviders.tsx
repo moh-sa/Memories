@@ -15,11 +15,14 @@ const localStorageOptions = {
 };
 
 const MantineProviders = ({ children }: { children: ReactNode }) => {
-  const [colorScheme, setColorScheme] =
-    useLocalStorage<ColorScheme>(localStorageOptions);
-  const toggleColorScheme = (value?: ColorScheme) =>
+  const [colorScheme, setColorScheme]
+    = useLocalStorage<ColorScheme>(localStorageOptions);
+  const toggleColorScheme = (value?: ColorScheme) => {
     setColorScheme(value || (colorScheme === "dark" ? "light" : "dark"));
-  useHotkeys([["mod+J", () => toggleColorScheme()]]);
+  };
+  useHotkeys([["mod+J", () => {
+    toggleColorScheme();
+  }]]);
 
   return (
     <ColorSchemeProvider

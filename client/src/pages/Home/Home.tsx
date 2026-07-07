@@ -1,15 +1,15 @@
-//Hooks
+// Hooks
 import { useState, useEffect } from "react";
 import { useStyles } from "./styles";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useTitle, useLocalStorage } from "Hooks";
-//Actions
+// Actions
 import { getAll, like, _delete } from "store/memories/memories.thunk";
-//UI Components
+// UI Components
 import { Common, MainPage } from "components";
 import { Container } from "@mantine/core";
-//Types
+// Types
 import type { AppDispatch, RootState } from "store/store";
 import type {
   DeleteMemoryArg,
@@ -19,26 +19,26 @@ import type {
 } from "types";
 
 const Home = () => {
-  //Hookes
+  // Hookes
   const { classes } = useStyles();
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const { set } = useLocalStorage();
   const [searchParams, setSearchParams] = useSearchParams();
   const { setTitle } = useTitle();
-  //states
+  // states
   const [isLoading, setIsLoading] = useState(true);
-  //Selectors
+  // Selectors
   const data = useSelector((state: RootState) => state.memories);
   const { user } = useSelector((state: RootState) => state.auth);
-  //Checkers
+  // Checkers
   const isReady = data.memories !== null;
-  //Variables
+  // Variables
   const currentPage = searchParams.get("page") ? searchParams.get("page") : 1;
-  //setTitle
+  // setTitle
   setTitle("Share memories with the world!");
 
-  const handleOnPageChange = async (data: number) => {
+  const handleOnPageChange = (data: number) => {
     setSearchParams({ page: data as unknown as string });
   };
 
@@ -62,7 +62,9 @@ const Home = () => {
   };
 
   useEffect(() => {
-    getAllMemories(currentPage);
+    void (async () => {
+      await getAllMemories(currentPage);
+    })();
   }, [currentPage]);
 
   return (

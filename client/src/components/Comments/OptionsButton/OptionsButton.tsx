@@ -1,7 +1,7 @@
-//UI Components
+// UI Components
 import { Menu, ActionIcon } from "@mantine/core";
-//Icons
-import { TbEdit, TbTrash, TbDots } from "react-icons/tb"; //Icons Imports
+// Icons
+import { TbEdit, TbTrash, TbDots } from "react-icons/tb"; // Icons Imports
 
 interface OptionsButtonProps {
   edit: () => void;

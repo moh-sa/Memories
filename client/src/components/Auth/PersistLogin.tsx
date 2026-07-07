@@ -1,11 +1,11 @@
-//Packages
+// Packages
 import { Outlet } from "react-router-dom";
-//Hooks
+// Hooks
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-//UI Components
+// UI Components
 import { Common } from "components";
-//Actions
+// Actions
 import { verifyToken } from "store/auth/auth.thunk";
 import type { AppDispatch, RootState } from "store/store";
 
@@ -18,14 +18,23 @@ const PersistLogin = () => {
     const verifyRefreshToken = async () => {
       try {
         await dispatch(verifyToken());
-      } catch (error) {
+      }
+      catch (error) {
         console.log(error);
-      } finally {
+      }
+      finally {
         setIsLoading(false);
       }
     };
 
-    !auth?.user ? verifyRefreshToken() : setIsLoading(false);
+    void (async () => {
+      if (!auth.user) {
+        await verifyRefreshToken();
+      }
+      else {
+        setIsLoading(false);
+      }
+    })();
   }, []);
 
   useEffect(() => {}, [isLoading]);

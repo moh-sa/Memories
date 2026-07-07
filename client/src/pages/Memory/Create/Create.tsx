@@ -1,6 +1,6 @@
-//Packages
+// Packages
 import { yupResolver } from "@hookform/resolvers/yup";
-//Hooks
+// Hooks
 import { useStyles } from "./styles";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -8,36 +8,36 @@ import { useNavigate } from "react-router-dom";
 import { useForm, FormProvider } from "react-hook-form";
 import type { FieldValues } from "react-hook-form";
 import { useTitle } from "Hooks";
-//Actions
+// Actions
 import { create } from "store/memories/memories.thunk";
-//Helpers
+// Helpers
 import { tagsHandler, descriptionHandler } from "helpers";
-//rules
+// rules
 import { memorySchema } from "rules";
-//UI Components
+// UI Components
 import { Common } from "components";
 import { Stack, Paper, Button, Title, Container } from "@mantine/core";
-//Icons
+// Icons
 import { TbPencil, TbSend } from "react-icons/tb";
-//Types
+// Types
 import type { AppDispatch, RootState } from "store/store";
 import type { MemoryMutationResponse } from "types";
 
 const Create = () => {
-  //Hookes
+  // Hookes
   const { classes } = useStyles();
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const { setTitle } = useTitle();
-  //States
+  // States
   const [isLoading, setIsLoading] = useState(false);
-  //Selectors
+  // Selectors
   const auth = useSelector((state: RootState) => state.auth);
-  //useForm
+  // useForm
   const methods = useForm({
     resolver: yupResolver(memorySchema.create),
   });
-  //setTitle
+  // setTitle
   setTitle("Create memory");
 
   const handleImageSelect = (data: string | ArrayBuffer) => {
@@ -48,7 +48,7 @@ const Create = () => {
   const handleBodyChange = (data: { body: string; description: string }) => {
     methods.setValue("body", data.body);
 
-    //register and setValue to new field
+    // register and setValue to new field
     methods.register("description");
     methods.setValue("description", data.description);
   };
@@ -56,9 +56,9 @@ const Create = () => {
   const handleOnSubmit = async (data: FieldValues) => {
     setIsLoading(true);
 
-    data.tags = await tagsHandler(data.tags);
-    data.description = await descriptionHandler(data.description);
-    data.author = auth?.user?._id;
+    data.tags = tagsHandler(data.tags as string[]);
+    data.description = descriptionHandler(data.description as string);
+    data.author = auth.user?._id;
 
     const { payload } = await dispatch(create(data));
     const successPayload = payload as MemoryMutationResponse | undefined;
@@ -97,9 +97,9 @@ const Create = () => {
                   name="Cover"
                   data={handleImageSelect}
                   err={
-                    methods.formState.errors?.cover?.message as
-                      | string
-                      | undefined
+                    methods.formState.errors.cover?.message as
+                    | string
+                    | undefined
                   }
                 />
 
@@ -108,9 +108,9 @@ const Create = () => {
                   <Common.UncontrolledFields.RichTextEditor.Memory
                     data={handleBodyChange}
                     err={
-                      methods.formState.errors?.body?.message as
-                        | string
-                        | undefined
+                      methods.formState.errors.body?.message as
+                      | string
+                      | undefined
                     }
                   />
                 </div>

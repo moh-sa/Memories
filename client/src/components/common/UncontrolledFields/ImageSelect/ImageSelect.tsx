@@ -1,10 +1,10 @@
-//Hooks
+// Hooks
 import type { ReactNode } from "react";
 import { useState } from "react";
-//UI Components
+// UI Components
 import { FileButton, Button, Text, Stack } from "@mantine/core";
 import { ImageSelectHandler } from "helpers";
-//Icon
+// Icon
 import { TbUpload, TbCheck, TbX } from "react-icons/tb";
 
 interface ImageSelectProps {
@@ -18,24 +18,28 @@ const ImageSelect = ({ data, err: errProp, isEdit, name }: ImageSelectProps) => 
   const [err, setErr] = useState(false);
   const [success, setSuccess] = useState(false);
 
-  //button COLOR condition
+  // button COLOR condition
   const btnColor = success ? "green" : err || errProp ? "red" : "gray";
-  //button ICON condition
-  const btnRightIcon = success ? (
-    <TbCheck size={18} />
-  ) : err || errProp ? (
-    <TbX size={18} color="red" />
-  ) : (
-    <TbUpload size={18} />
-  );
-  //button TEXT condition
+  // button ICON condition
+  const btnRightIcon = success
+    ? (
+        <TbCheck size={18} />
+      )
+    : err || errProp
+      ? (
+          <TbX size={18} color="red" />
+        )
+      : (
+          <TbUpload size={18} />
+        );
+  // button TEXT condition
   const btnText = success
     ? "All good"
     : err || errProp
-    ? "something went wrong..."
-    : isEdit
-    ? "Unfortunately, you cannot edit the cover."
-    : "Upload an image";
+      ? "something went wrong..."
+      : isEdit
+        ? "Unfortunately, you cannot edit the cover."
+        : "Upload an image";
 
   const handleOnChange = async (e: File | null) => {
     setErr(false);
@@ -44,7 +48,8 @@ const ImageSelect = ({ data, err: errProp, isEdit, name }: ImageSelectProps) => 
     const base64 = await ImageSelectHandler(e as File);
 
     if (!base64) {
-      return setErr(true);
+      setErr(true);
+      return;
     }
 
     setSuccess(true);
@@ -55,7 +60,9 @@ const ImageSelect = ({ data, err: errProp, isEdit, name }: ImageSelectProps) => 
     <Stack spacing={0}>
       {/* Label */}
       <Text size="sm">
-        {name} <span style={{ color: "red" }}>*</span>
+        {name}
+        {" "}
+        <span style={{ color: "red" }}>*</span>
       </Text>
       {/* Description */}
       <Text size="sm" color="dimmed">
@@ -78,7 +85,7 @@ const ImageSelect = ({ data, err: errProp, isEdit, name }: ImageSelectProps) => 
         onChange={handleOnChange}
         accept="image/png,image/jpeg,image/jpg,image/webp,image/gif,image/apng"
       >
-        {(props) => (
+        {props => (
           <Button
             {...props}
             variant="outline"

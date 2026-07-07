@@ -1,10 +1,10 @@
-//Hooks
+// Hooks
 import type { ReactNode } from "react";
 import { useStyles } from "./styles";
-//UI Components
+// UI Components
 import { Container, Group, ActionIcon, Popover, Text } from "@mantine/core";
 import { Common } from "components";
-//Icons
+// Icons
 import { TbBrandInstagram } from "react-icons/tb";
 import { TbBrandTwitter, TbBrandYoutube } from "react-icons/tb";
 

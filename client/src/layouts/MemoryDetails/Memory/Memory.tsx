@@ -1,13 +1,13 @@
-//Hooks
+// Hooks
 import { useStyles } from "./styles";
-//Components
+// Components
 import Moment from "react-moment";
-//UI Components
+// UI Components
 import { Markup } from "interweave";
 import { Group, Title, Text, Avatar } from "@mantine/core";
 import { Image, Container, ActionIcon } from "@mantine/core";
 import { TypographyStylesProvider } from "@mantine/core";
-//Icons
+// Icons
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 import type { LikeMemoryArg, Memory as MemoryType, User } from "types";
 
@@ -24,14 +24,16 @@ const Memory = ({ data, like, user }: MemoryProps) => {
   let likeIcon;
 
   if (isLoggedIn) {
-    likeIcon = data.likes.includes((user as User)._id) ? (
-      <AiFillHeart size={18} color="red" />
-    ) : (
-      <AiOutlineHeart size={18} color="red" />
-    );
+    likeIcon = data.likes.includes((user)._id)
+      ? (
+          <AiFillHeart size={18} color="red" />
+        )
+      : (
+          <AiOutlineHeart size={18} color="red" />
+        );
   }
 
-  const handleLike = async () => {
+  const handleLike = () => {
     like({ _id: data._id, userId: (user as User)._id, type: "cover" });
   };
 
@@ -78,7 +80,9 @@ const Memory = ({ data, like, user }: MemoryProps) => {
           )}
           {/* Number of Likes */}
           <Text size="sm" color="dimmed">
-            {data.likes?.length} likes
+            {data.likes.length}
+            {" "}
+            likes
           </Text>
         </Group>
       </div>

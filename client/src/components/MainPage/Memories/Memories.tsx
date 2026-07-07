@@ -1,6 +1,6 @@
-//Hooks
+// Hooks
 import { useStyles } from "./styles";
-//UI Components
+// UI Components
 import { Common } from "components";
 import { Grid } from "@mantine/core";
 import type {
@@ -18,12 +18,12 @@ interface MemoriesProps {
 }
 
 const Memories = ({ data, user, like, edit, _delete }: MemoriesProps) => {
-  //Hookes
+  // Hookes
   const { classes } = useStyles();
-  //Data
+  // Data
   const memoriesArray = data.map((memory, index) => (
     <Grid.Col
-      key={memory._id + index}
+      key={memory._id + String(index)}
       className={classes.GridCol}
       xs={12}
       sm={6}
