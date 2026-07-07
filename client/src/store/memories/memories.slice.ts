@@ -21,8 +21,11 @@ const memoriesSlice = createSlice({
     builder
       // 👇 GET ALL
       .addCase(thunk.getAll.fulfilled, (state, action) => {
-        state.memories = action.payload.data.memories;
-        state.numberOfPages = action.payload.data.numberOfPages;
+        const payload = action.payload.data;
+        if (!payload) return;
+
+        state.memories = payload.memories;
+        state.numberOfPages = payload.numberOfPages;
       })
       // 👆 GET ALL
       // 👇 CREATE
@@ -120,8 +123,11 @@ const memoriesSlice = createSlice({
       // 👆 LIKE
       // 👇 SEARCH
       .addCase(thunk.searchReq.fulfilled, (state, action) => {
-        state.memories = action.payload.data.memories;
-        state.numberOfPages = action.payload.data.numberOfPages;
+        const payload = action.payload.data;
+        if (!payload) return;
+
+        state.memories = payload.memories;
+        state.numberOfPages = payload.numberOfPages;
       });
     // 👆 SEARCH
   },

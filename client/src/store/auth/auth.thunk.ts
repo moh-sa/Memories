@@ -16,7 +16,13 @@ export const login = createAsyncThunk<
 >("auth/login", async (userData, thunkAPI) => {
   try {
     const { data } = await auth.login(userData);
-    return cookieExtractor(data.data.accessToken);
+    const accessTokenName = data.data?.accessToken;
+
+    if (!accessTokenName) {
+      return thunkAPI.rejectWithValue({ message: "Login response was invalid." });
+    }
+
+    return cookieExtractor(accessTokenName);
   }
   catch (error) {
     return thunkAPI.rejectWithValue(getApiError(error));
@@ -59,7 +65,13 @@ export const verifyToken = createAsyncThunk<
 >("auth/verifyToken", async (_, thunkAPI) => {
   try {
     const { data } = await auth.verifyToken();
-    return cookieExtractor(data.data.accessToken);
+    const accessTokenName = data.data?.accessToken;
+
+    if (!accessTokenName) {
+      return thunkAPI.rejectWithValue({ message: "Not authenticated." });
+    }
+
+    return cookieExtractor(accessTokenName);
   }
   catch (error) {
     return thunkAPI.rejectWithValue(getApiError(error));
