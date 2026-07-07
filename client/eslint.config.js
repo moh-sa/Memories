@@ -43,4 +43,16 @@ export default tseslint.config(
       ...stylistic.configs.customize({ indent: 2, quotes: "double", semi: true, jsx: true }).rules,
     },
   },
+  {
+    // Test files assert on loosely-typed values (mocks, response bodies).
+    files: ["**/*.{test,spec}.{ts,tsx}", "src/test/**"],
+    rules: {
+      "@typescript-eslint/no-unsafe-assignment": "off",
+      "@typescript-eslint/no-unsafe-member-access": "off",
+      "@typescript-eslint/no-unsafe-call": "off",
+      "@typescript-eslint/no-unsafe-argument": "off",
+      "@typescript-eslint/no-unsafe-return": "off",
+      "@typescript-eslint/no-non-null-assertion": "off",
+    },
+  },
 );
