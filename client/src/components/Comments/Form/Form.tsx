@@ -73,7 +73,7 @@ const Form = ({ memoryId, user }: FormProps) => {
       handlers.open();
       methods.setValue("comment", localValue.body);
     }
-  }, [localValue]);
+  }, [isEdit, localValue, handlers, methods]);
 
   return (
     <Paper withBorder className={classes.paper}>

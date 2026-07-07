@@ -37,6 +37,7 @@ const Profile = () => {
   );
   const [isLoading, setIsLoading] = useState(true);
   const [isExists, setIsExists] = useState(false);
+  const [prevUsername, setPrevUsername] = useState(username);
   // variables
   const avatar = (
     <Avatar
@@ -49,25 +50,27 @@ const Profile = () => {
   // setTitle
   setTitle(`${username} profile`);
 
-  const getProfile = async () => {
+  if (username !== prevUsername) {
+    setPrevUsername(username);
+    setProfData(null);
+    setIsExists(false);
     setIsLoading(true);
-    try {
-      const { data } = await user.getProfile({ username });
-      setProfData(data.data);
-      setIsExists(true);
-    }
-    catch (error) {
-      console.log(error);
-      setIsExists(false);
-    }
-    finally {
-      setIsLoading(false);
-    }
-  };
+  }
 
   useEffect(() => {
     void (async () => {
-      await getProfile();
+      try {
+        const { data } = await user.getProfile({ username });
+        setProfData(data.data);
+        setIsExists(true);
+      }
+      catch (error) {
+        console.log(error);
+        setIsExists(false);
+      }
+      finally {
+        setIsLoading(false);
+      }
     })();
   }, [username]);
 

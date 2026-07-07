@@ -79,38 +79,34 @@ const Activation = () => {
     ),
   };
 
-  const verifyCode = async () => {
-    if (!code || !uuidRegex.test(code)) {
-      setRes(failure);
-      return;
-    }
-
-    try {
-      const { data } = await auth.verifyCode(code);
-
-      setRes({
-        status: "success",
-        title: "Done! 🎉",
-        msg: data.message,
-      });
-
-      setIsSuccess(true);
-    }
-    catch (error) {
-      const apiError = getApiError(error);
-      setRes({
-        status: "failure",
-        title: "Uh Oh!",
-        msg: apiError.message ?? "Activation failed.",
-      });
-    }
-  };
-
   useEffect(() => {
     void (async () => {
-      await verifyCode();
+      if (!code || !uuidRegex.test(code)) {
+        setRes(failure);
+        return;
+      }
+
+      try {
+        const { data } = await auth.verifyCode(code);
+
+        setRes({
+          status: "success",
+          title: "Done! 🎉",
+          msg: data.message,
+        });
+
+        setIsSuccess(true);
+      }
+      catch (error) {
+        const apiError = getApiError(error);
+        setRes({
+          status: "failure",
+          title: "Uh Oh!",
+          msg: apiError.message ?? "Activation failed.",
+        });
+      }
     })();
-  }, []);
+  }, [code]);
 
   useEffect(() => {
     if (isSuccess) {
@@ -118,7 +114,7 @@ const Activation = () => {
     }
 
     return interval.stop;
-  }, [isSuccess]);
+  }, [isSuccess, interval]);
 
   return (
     <section className={classes.section}>

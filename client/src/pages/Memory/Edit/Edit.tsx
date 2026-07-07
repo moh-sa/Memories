@@ -37,6 +37,14 @@ const Edit = () => {
   // useForm
   const methods = useForm<MemoryEditFormValues>({
     resolver: typedYupResolver(memorySchema.edit),
+    values: editData
+      ? {
+          title: editData.title,
+          tags: editData.tags,
+          body: editData.body,
+          description: editData.description,
+        }
+      : undefined,
   });
   // setTitle
   if (editData) {
@@ -73,14 +81,6 @@ const Edit = () => {
   useEffect(() => {
     methods.register("description");
   }, [methods]);
-
-  useEffect(() => {
-    if (editData) {
-      methods.setValue("title", editData.title);
-      methods.setValue("tags", editData.tags);
-      methods.setValue("body", editData.body);
-    }
-  }, [editData, methods]);
 
   return (
     <section className={classes.section}>

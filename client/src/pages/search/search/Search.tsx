@@ -1,5 +1,5 @@
 // Hooks
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { useStyles } from "./styles";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useLocation } from "react-router-dom";
@@ -16,7 +16,6 @@ import type {
   DeleteMemoryArg,
   LikeMemoryArg,
   Memory,
-  SearchArg,
 } from "types";
 
 const Search = () => {
@@ -28,8 +27,6 @@ const Search = () => {
   const { search } = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
   const { setTitle } = useTitle();
-  // states
-  const [isLoading, setIsLoading] = useState(true);
   // Selectors
   const data = useAppSelector((state: RootState) => state.memories);
   const { user } = useAppSelector((state: RootState) => state.auth);
@@ -67,31 +64,24 @@ const Search = () => {
     await dispatch(_delete(data));
   };
 
-  const getSearchResults = async (page: SearchArg["page"] = 1) => {
-    setIsLoading(true);
-    const query = getQuery ? getQuery : "none";
-    const tags = getTags ? getTags : "none";
-
-    const result = await dispatch(searchReq({ page, query, tags }));
-    if (searchReq.rejected.match(result) && result.payload?.statusCode === 404) {
-      navigate(`/${result.payload.statusCode}`, {
-        state: { code: result.payload.statusCode, msg: result.payload.message },
-      });
-    }
-
-    setIsLoading(false);
-  };
-
   useEffect(() => {
     void (async () => {
       if (!search || (!getTags && !getQuery)) {
         navigate("/");
+        return;
       }
-      else {
-        await getSearchResults(currentPage);
+
+      const query = getQuery ? getQuery : "none";
+      const tags = getTags ? getTags : "none";
+      const result = await dispatch(searchReq({ page: currentPage, query, tags }));
+
+      if (searchReq.rejected.match(result) && result.payload?.statusCode === 404) {
+        navigate(`/${result.payload.statusCode}`, {
+          state: { code: result.payload.statusCode, msg: result.payload.message },
+        });
       }
     })();
-  }, [currentPage, search]);
+  }, [currentPage, search, getQuery, getTags, navigate, dispatch]);
 
   return (
     <section className={classes.section}>
@@ -103,7 +93,7 @@ const Search = () => {
           {" "}
           Search Results
         </Title>
-        {isLoading && <Common.LoadingOverlay />}
+        {!isReady && <Common.LoadingOverlay />}
         {isReady && !isExists && (
           <div className={classes.notFound}>
             <Title order={2}>Uh Oh!</Title>

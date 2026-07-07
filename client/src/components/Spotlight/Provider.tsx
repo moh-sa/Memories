@@ -17,57 +17,51 @@ interface ProviderProps {
 }
 
 const Provider = ({ children }: ProviderProps) => {
-  // hooks
   const navigate = useNavigate();
   const [actions, setActions] = useState<SpotlightAction[]>([]);
 
-  const getData = async () => {
-    try {
-      const titlesPromise = search.getTitles();
-      const tagsPromise = memory.getTags();
-      const [titlesData, tagsData] = await Promise.all([
-        titlesPromise,
-        tagsPromise,
-      ]);
-
-      const titlesArr = titlesData.data.data.titles;
-      const tagsArr = tagsData.data.data.tags;
-
-      const titlesObjs = titlesArr.map(title => ({
-        title,
-        description: "memory",
-        group: "memories",
-        onTrigger: () => { navigate(`/search?query=${title}`); },
-        icon: <MdOutlineLibraryBooks size={18} />,
-      }));
-      const tagsObjs = tagsArr.map(tag => ({
-        title: tag,
-        description: "tag",
-        group: "tags",
-        onTrigger: () => { navigate(`/search?tags=${tag}`); },
-        icon: <TbTag size={18} />,
-      }));
-
-      const home = {
-        title: "Home",
-        group: "main",
-        onTrigger: () => { navigate(`/`); },
-        icon: <TbHome size={18} />,
-      };
-      const data = [home, ...titlesObjs, ...tagsObjs];
-
-      setActions(data);
-    }
-    catch (error) {
-      console.log(error);
-    }
-  };
-
   useEffect(() => {
     void (async () => {
-      await getData();
+      try {
+        const titlesPromise = search.getTitles();
+        const tagsPromise = memory.getTags();
+        const [titlesData, tagsData] = await Promise.all([
+          titlesPromise,
+          tagsPromise,
+        ]);
+
+        const titlesArr = titlesData.data.data.titles;
+        const tagsArr = tagsData.data.data.tags;
+
+        const titlesObjs = titlesArr.map(title => ({
+          title,
+          description: "memory",
+          group: "memories",
+          onTrigger: () => { navigate(`/search?query=${title}`); },
+          icon: <MdOutlineLibraryBooks size={18} />,
+        }));
+        const tagsObjs = tagsArr.map(tag => ({
+          title: tag,
+          description: "tag",
+          group: "tags",
+          onTrigger: () => { navigate(`/search?tags=${tag}`); },
+          icon: <TbTag size={18} />,
+        }));
+
+        const home = {
+          title: "Home",
+          group: "main",
+          onTrigger: () => { navigate(`/`); },
+          icon: <TbHome size={18} />,
+        };
+
+        setActions([home, ...titlesObjs, ...tagsObjs]);
+      }
+      catch (error) {
+        console.log(error);
+      }
     })();
-  }, []);
+  }, [navigate]);
 
   return (
     <SpotlightProvider

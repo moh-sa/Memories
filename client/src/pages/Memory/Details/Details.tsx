@@ -44,34 +44,27 @@ const Details = () => {
     await dispatch(like(data));
   };
 
-  const getMemorys = async () => {
-    const result = await dispatch(getSingle({ _id }));
-
-    if (getSingle.rejected.match(result) && result.payload?.statusCode === 404) {
-      navigate(`/${result.payload.statusCode}`, {
-        state: { code: result.payload.statusCode, msg: result.payload.message },
-      });
-    }
-  };
-
-  const getComments = async () => {
-    await dispatch(getAll({ _id }));
-  };
-
-  const getRecommendations = async () => {
-    const { data } = await recommendations.get({ _id });
-    setRecosData(data.data.recommendations);
-  };
-
   useEffect(() => {
     void (async () => {
-      await Promise.all([
-        getMemorys(),
-        getComments(),
-        getRecommendations(),
-      ]);
+      const result = await dispatch(getSingle({ _id }));
+
+      if (getSingle.rejected.match(result) && result.payload?.statusCode === 404) {
+        navigate(`/${result.payload.statusCode}`, {
+          state: { code: result.payload.statusCode, msg: result.payload.message },
+        });
+      }
+
+      await dispatch(getAll({ _id }));
+
+      try {
+        const { data } = await recommendations.get({ _id });
+        setRecosData(data.data.recommendations);
+      }
+      catch (error) {
+        console.log(error);
+      }
     })();
-  }, [_id]);
+  }, [_id, dispatch, navigate]);
 
   return (
     <Container className={classes.section}>

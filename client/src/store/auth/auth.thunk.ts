@@ -16,7 +16,7 @@ export const login = createAsyncThunk<
 >("auth/login", async (userData, thunkAPI) => {
   try {
     const { data } = await auth.login(userData);
-    const accessTokenName = data.data?.accessToken;
+    const accessTokenName = data.data.accessToken;
 
     if (!accessTokenName) {
       return thunkAPI.rejectWithValue({ message: "Login response was invalid." });
@@ -65,7 +65,7 @@ export const verifyToken = createAsyncThunk<
 >("auth/verifyToken", async (_, thunkAPI) => {
   try {
     const { data } = await auth.verifyToken();
-    const accessTokenName = data.data?.accessToken;
+    const accessTokenName = data.data.accessToken;
 
     if (!accessTokenName) {
       return thunkAPI.rejectWithValue({ message: "Not authenticated." });

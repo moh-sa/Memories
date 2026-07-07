@@ -1,5 +1,5 @@
 // Hooks
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { useStyles } from "./styles";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useTitle, useLocalStorage } from "Hooks";
@@ -13,7 +13,6 @@ import type { RootState } from "store/store";
 import { useAppDispatch, useAppSelector } from "store/hooks";
 import type {
   DeleteMemoryArg,
-  GetMemoriesArg,
   LikeMemoryArg,
   Memory,
 } from "types";
@@ -26,8 +25,6 @@ const Home = () => {
   const { set } = useLocalStorage();
   const [searchParams, setSearchParams] = useSearchParams();
   const { setTitle } = useTitle();
-  // states
-  const [isLoading, setIsLoading] = useState(true);
   // Selectors
   const data = useAppSelector((state: RootState) => state.memories);
   const { user } = useAppSelector((state: RootState) => state.auth);
@@ -56,22 +53,14 @@ const Home = () => {
     await dispatch(_delete(data));
   };
 
-  const getAllMemories = async (page: GetMemoriesArg["page"] = 1) => {
-    setIsLoading(true);
-    await dispatch(getAll({ page }));
-    setIsLoading(false);
-  };
-
   useEffect(() => {
-    void (async () => {
-      await getAllMemories(currentPage);
-    })();
-  }, [currentPage]);
+    void dispatch(getAll({ page: currentPage }));
+  }, [currentPage, dispatch]);
 
   return (
     <section className={classes.section}>
       <Container size="xl">
-        {isLoading && <Common.LoadingOverlay />}
+        {!isReady && <Common.LoadingOverlay />}
         {isReady && (
           <MainPage.Memories
             data={memories}

@@ -12,9 +12,11 @@ import type { AppDispatch, RootState } from "store/store";
 const PersistLogin = () => {
   const [isLoading, setIsLoading] = useState(true);
   const dispatch = useDispatch<AppDispatch>();
-  const auth = useSelector((state: RootState) => state.auth);
+  const user = useSelector((state: RootState) => state.auth.user);
 
   useEffect(() => {
+    let cancelled = false;
+
     const verifyRefreshToken = async () => {
       try {
         await dispatch(verifyToken());
@@ -23,21 +25,25 @@ const PersistLogin = () => {
         console.log(error);
       }
       finally {
-        setIsLoading(false);
+        if (!cancelled) {
+          setIsLoading(false);
+        }
       }
     };
 
     void (async () => {
-      if (!auth.user) {
+      if (!user) {
         await verifyRefreshToken();
       }
       else {
         setIsLoading(false);
       }
     })();
-  }, []);
 
-  useEffect(() => {}, [isLoading]);
+    return () => {
+      cancelled = true;
+    };
+  }, [dispatch, user]);
 
   return <>{isLoading ? <LoadingOverlay /> : <Outlet />}</>;
 };

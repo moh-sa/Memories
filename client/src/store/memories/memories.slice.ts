@@ -20,12 +20,12 @@ const memoriesSlice = createSlice({
   extraReducers: (builder) => {
     builder
       // 👇 GET ALL
+      .addCase(thunk.getAll.pending, (state) => {
+        state.memories = null;
+      })
       .addCase(thunk.getAll.fulfilled, (state, action) => {
-        const payload = action.payload.data;
-        if (!payload) return;
-
-        state.memories = payload.memories;
-        state.numberOfPages = payload.numberOfPages;
+        state.memories = action.payload.data.memories;
+        state.numberOfPages = action.payload.data.numberOfPages;
       })
       // 👆 GET ALL
       // 👇 CREATE
@@ -122,12 +122,12 @@ const memoriesSlice = createSlice({
       })
       // 👆 LIKE
       // 👇 SEARCH
+      .addCase(thunk.searchReq.pending, (state) => {
+        state.memories = null;
+      })
       .addCase(thunk.searchReq.fulfilled, (state, action) => {
-        const payload = action.payload.data;
-        if (!payload) return;
-
-        state.memories = payload.memories;
-        state.numberOfPages = payload.numberOfPages;
+        state.memories = action.payload.data.memories;
+        state.numberOfPages = action.payload.data.numberOfPages;
       });
     // 👆 SEARCH
   },

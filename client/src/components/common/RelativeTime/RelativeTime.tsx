@@ -32,21 +32,19 @@ interface RelativeTimeProps {
 }
 
 const RelativeTime = ({ children, interval = 60_000 }: RelativeTimeProps) => {
-  const [label, setLabel] = useState(() => getRelativeTime(children));
+  const [, setTick] = useState(0);
 
   useEffect(() => {
-    setLabel(getRelativeTime(children));
-
     const timerId = window.setInterval(() => {
-      setLabel(getRelativeTime(children));
+      setTick(previous => previous + 1);
     }, interval);
 
     return () => {
       window.clearInterval(timerId);
     };
-  }, [children, interval]);
+  }, [interval]);
 
-  return <>{label}</>;
+  return <>{getRelativeTime(children)}</>;
 };
 
 export default RelativeTime;

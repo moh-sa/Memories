@@ -59,7 +59,7 @@ vi.mock("@tiptap/react", async () => {
             getText: () => "body text",
           },
         });
-      }, []);
+      }, [config]);
       return {
         commands: { focus: () => {} },
       };

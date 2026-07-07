@@ -1,5 +1,5 @@
 // Hooks
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { useStyles } from "./styles";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useParams, useLocation, Link } from "react-router-dom";
@@ -16,7 +16,6 @@ import type { RootState } from "store/store";
 import { useAppDispatch, useAppSelector } from "store/hooks";
 import type {
   DeleteMemoryArg,
-  GetMemoriesArg,
   LikeMemoryArg,
   Memory,
 } from "types";
@@ -31,8 +30,6 @@ const Memories = () => {
   const { username } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
   const { setTitle } = useTitle();
-  // states
-  const [isLoading, setIsLoading] = useState(true);
   // Selectors
   const data = useAppSelector((state: RootState) => state.memories);
   const { user } = useAppSelector((state: RootState) => state.auth);
@@ -67,29 +64,21 @@ const Memories = () => {
     await dispatch(_delete(data));
   };
 
-  const getAllMemories = async (page: GetMemoriesArg["page"] = 1) => {
-    setIsLoading(true);
-
-    const result = await dispatch(getAll({ page, username, type }));
-    if (getAll.rejected.match(result) && result.payload?.statusCode === 404) {
-      navigate(`/${result.payload.statusCode}`, {
-        state: { code: result.payload.statusCode, msg: result.payload.message },
-      });
-    }
-
-    setIsLoading(false);
-  };
-
   useEffect(() => {
     void (async () => {
-      await getAllMemories(currentPage);
+      const result = await dispatch(getAll({ page: currentPage, username, type }));
+      if (getAll.rejected.match(result) && result.payload?.statusCode === 404) {
+        navigate(`/${result.payload.statusCode}`, {
+          state: { code: result.payload.statusCode, msg: result.payload.message },
+        });
+      }
     })();
-  }, [currentPage]);
+  }, [currentPage, dispatch, navigate, type, username]);
 
   return (
     <section className={classes.section}>
       <Container size="xl">
-        {isLoading && <Common.LoadingOverlay />}
+        {!isReady && <Common.LoadingOverlay />}
         <Text transform="capitalize" component={Link} to={`/user/${username}`}>
           <MdArrowBackIosNew />
           {" "}
