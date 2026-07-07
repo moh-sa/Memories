@@ -8,7 +8,8 @@ import { like, _delete } from "store/comments/comments.thunk";
 // Components
 import Moment from "react-moment";
 // UI Components
-import { Comments, Common } from "components";
+import OptionsButton from "components/Comments/OptionsButton/OptionsButton";
+import Modals from "components/common/Modals";
 import { Paper, Text, Avatar, Group, Stack, ActionIcon } from "@mantine/core";
 // Icons
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
@@ -36,9 +37,9 @@ const Comment = ({ data, user }: CommentCardProps) => {
   let likeIcon;
 
   if (isLoggedIn) {
-    isAuthor = data.author._id === (user)._id;
-    isAdmin = (user).role === "admin";
-    likeIcon = data.likes.includes((user)._id)
+    isAuthor = data.author._id === user._id;
+    isAdmin = user.role === "admin";
+    likeIcon = data.likes.includes(user._id)
       ? (
           <AiFillHeart size={18} color="red" />
         )
@@ -56,7 +57,11 @@ const Comment = ({ data, user }: CommentCardProps) => {
   };
 
   const handleLike = async () => {
-    await dispatch(like({ _id: data._id, userId: (user as User)._id }));
+    if (!user) {
+      return;
+    }
+
+    await dispatch(like({ _id: data._id, userId: user._id }));
   };
 
   return (
@@ -81,7 +86,7 @@ const Comment = ({ data, user }: CommentCardProps) => {
             </div>
           </Group>
           {isLoggedIn && (isAuthor || isAdmin) && (
-            <Comments.OptionsButton
+            <OptionsButton
               edit={handleEdit}
               _delete={() => { setIsModelOpened(true); }}
             />
@@ -104,7 +109,7 @@ const Comment = ({ data, user }: CommentCardProps) => {
           <Text className={classes.content}>{data.body}</Text>
         </Group>
       </Paper>
-      <Common.Modals.Delete
+      <Modals.Delete
         open={isModelOpened}
         close={() => { setIsModelOpened(false); }}
         yes={handleDelete}

@@ -2,6 +2,7 @@ import type { Request, Response } from "express";
 import { memoryModel, commentModel } from "../../models/index.js";
 import { helpers } from "../../utils/index.js";
 import { imgConfig } from "../../configs/index.js";
+import { getQueryString } from "../../utils/queryParams.js";
 
 interface LeanMemory {
   _id: string;
@@ -12,9 +13,9 @@ interface LeanMemory {
 }
 
 export default async function (req: Request, res: Response) {
-  const page = req.query.page as string;
-  const type = req.query.type as string;
-  const userId = res.locals.userId as string | undefined;
+  const page = getQueryString(req.query, "page") ?? "1";
+  const type = getQueryString(req.query, "type") ?? "";
+  const userId = res.locals.userId;
   const isMemory = type === "memories" && { author: userId };
   const isLike = type === "likes" && { likes: userId };
 

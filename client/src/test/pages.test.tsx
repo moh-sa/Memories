@@ -5,25 +5,66 @@ import { mockMemory, mockComment, mockUser } from "test/mockData";
 
 Element.prototype.scrollTo = vi.fn();
 
-vi.mock("@mantine/rte", async () => {
+vi.mock("@mantine/tiptap", async () => {
   const React = await import("react");
-  const RichTextEditor = React.forwardRef(
-    (
-      props: { onChange?: (value: string) => void },
-      ref: React.Ref<unknown>,
-    ) => {
-      React.useImperativeHandle(ref, () => ({
-        focus: () => {},
-        editor: { container: { innerText: "body text" } },
-      }));
-      React.useEffect(() => {
-        props.onChange?.("<p>hello</p>");
-      }, []);
-      return React.createElement("div", { "data-testid": "rte" });
+  const RichTextEditor = Object.assign(
+    ({ children }: { children?: React.ReactNode }) =>
+      React.createElement("div", { "data-testid": "rte" }, children),
+    {
+      Toolbar: ({ children }: { children?: React.ReactNode }) =>
+        React.createElement("div", null, children),
+      ControlsGroup: ({ children }: { children?: React.ReactNode }) =>
+        React.createElement("div", null, children),
+      Control: ({ children }: { children?: React.ReactNode }) =>
+        React.createElement("button", { type: "button" }, children),
+      Content: () => React.createElement("div", null),
+      Bold: () => null,
+      Italic: () => null,
+      Underline: () => null,
+      Strikethrough: () => null,
+      ClearFormatting: () => null,
+      H1: () => null,
+      H2: () => null,
+      H3: () => null,
+      H4: () => null,
+      BulletList: () => null,
+      OrderedList: () => null,
+      AlignLeft: () => null,
+      AlignCenter: () => null,
+      AlignRight: () => null,
+      Link: () => null,
+      Unlink: () => null,
+      Blockquote: () => null,
     },
   );
-  RichTextEditor.displayName = "RichTextEditor";
-  return { RichTextEditor };
+  return {
+    RichTextEditor,
+    Link: {},
+    useRichTextEditorContext: () => ({ editor: null }),
+  };
+});
+
+vi.mock("@tiptap/react", async () => {
+  const React = await import("react");
+  return {
+    useEditor: (config: {
+      onUpdate?: (args: {
+        editor: { getHTML: () => string; getText: () => string };
+      }) => void;
+    }) => {
+      React.useEffect(() => {
+        config.onUpdate?.({
+          editor: {
+            getHTML: () => "<p>hello</p>",
+            getText: () => "body text",
+          },
+        });
+      }, []);
+      return {
+        commands: { focus: () => {} },
+      };
+    },
+  };
 });
 
 vi.mock("services", async () => {

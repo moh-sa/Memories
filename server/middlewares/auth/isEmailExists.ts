@@ -1,11 +1,22 @@
 import type { Request, Response, NextFunction } from "express";
 import { userModel } from "../../models/index.js";
-import type { AuthUser } from "../../types/express.js";
+import type { AuthUserDocument } from "../../types/express.js";
+import { isEmailBody } from "../../utils/requestBody.js";
 
 export default async function (req: Request, res: Response, next: NextFunction) {
-  const { email } = req.body as { email: string };
+  if (!isEmailBody(req.body)) {
+    return res.status(400).json({
+      statusCode: 400,
+      from: "middlewares/isEmailExists 0",
+      message: "A valid email is required.",
+    });
+  }
 
-  const userData = await userModel.findOne({ email }).lean<AuthUser | null>();
+  const { email } = req.body;
+
+  const userData = await userModel
+    .findOne({ email })
+    .lean<AuthUserDocument | null>();
 
   if (req.url.includes("login")) {
     if (!userData) {
@@ -15,6 +26,8 @@ export default async function (req: Request, res: Response, next: NextFunction) 
         message: "Either email or password is incorrect.",
       });
     }
+
+    req.localData = userData;
   }
   else if (req.url.includes("register")) {
     if (userData) {
@@ -25,10 +38,6 @@ export default async function (req: Request, res: Response, next: NextFunction) 
       });
     }
   }
-
-  // note: in the register branch userData is null here; assigning it preserves
-  // the original behavior. Cast satisfies the declared AuthUser slot.
-  req.localData = userData as AuthUser;
 
   next();
 }

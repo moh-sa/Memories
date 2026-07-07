@@ -1,8 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import * as thunk from "./memories.thunk";
-import { Common } from "components";
+import NOTIF from "components/common/Notifications/WithID";
 import type { Memory } from "types";
-const NOTIF = Common.Notifications.ID;
 
 interface MemoriesState {
   memories: Memory[] | null;
@@ -86,7 +85,9 @@ const memoriesSlice = createSlice({
       .addCase(thunk._delete.fulfilled, (state, action) => {
         NOTIF.Success("delete", "Done!", "Your memory has been deleted.");
 
-        state.memories = (state.memories as Memory[]).filter(
+        if (!state.memories) return;
+
+        state.memories = state.memories.filter(
           memory => memory._id !== action.payload._id,
         );
       })
@@ -109,8 +110,10 @@ const memoriesSlice = createSlice({
       .addCase(thunk.like.fulfilled, (state, action) => {
         NOTIF.Success("like", "Done!", "");
 
+        if (!state.memories) return;
+
         const payload = action.payload.memory.data.memory;
-        state.memories = (state.memories as Memory[]).map(memory =>
+        state.memories = state.memories.map(memory =>
           memory._id === payload._id ? payload : memory,
         );
       })

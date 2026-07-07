@@ -6,12 +6,16 @@ import {
 } from "@mantine/core";
 import { NotificationsProvider } from "@mantine/notifications";
 import { useHotkeys, useLocalStorage } from "@mantine/hooks";
-import { Spotlight } from "components";
+import Spotlight from "components/Spotlight";
 
 const localStorageOptions = {
   key: "mantine-color-scheme",
-  defaultValue: "light" as ColorScheme,
+  defaultValue: "light",
   getInitialValueInEffect: true,
+} satisfies {
+  key: string;
+  defaultValue: ColorScheme;
+  getInitialValueInEffect: boolean;
 };
 
 const MantineProviders = ({ children }: { children: ReactNode }) => {

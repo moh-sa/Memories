@@ -1,7 +1,6 @@
 // Hooks
 import { useState, useEffect } from "react";
 import { useStyles } from "./styles";
-import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useTitle, useLocalStorage } from "Hooks";
 // Actions
@@ -10,7 +9,8 @@ import { getAll, like, _delete } from "store/memories/memories.thunk";
 import { Common, MainPage } from "components";
 import { Container } from "@mantine/core";
 // Types
-import type { AppDispatch, RootState } from "store/store";
+import type { RootState } from "store/store";
+import { useAppDispatch, useAppSelector } from "store/hooks";
 import type {
   DeleteMemoryArg,
   GetMemoriesArg,
@@ -21,7 +21,7 @@ import type {
 const Home = () => {
   // Hookes
   const { classes } = useStyles();
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { set } = useLocalStorage();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -29,17 +29,18 @@ const Home = () => {
   // states
   const [isLoading, setIsLoading] = useState(true);
   // Selectors
-  const data = useSelector((state: RootState) => state.memories);
-  const { user } = useSelector((state: RootState) => state.auth);
+  const data = useAppSelector((state: RootState) => state.memories);
+  const { user } = useAppSelector((state: RootState) => state.auth);
   // Checkers
-  const isReady = data.memories !== null;
+  const memories = data.memories;
+  const isReady = memories !== null;
   // Variables
   const currentPage = searchParams.get("page") ? searchParams.get("page") : 1;
   // setTitle
   setTitle("Share memories with the world!");
 
-  const handleOnPageChange = (data: number) => {
-    setSearchParams({ page: data as unknown as string });
+  const handleOnPageChange = (page: number) => {
+    setSearchParams({ page: String(page) });
   };
 
   const likeMemory = async (data: LikeMemoryArg) => {
@@ -73,7 +74,7 @@ const Home = () => {
         {isLoading && <Common.LoadingOverlay />}
         {isReady && (
           <MainPage.Memories
-            data={data.memories as Memory[]}
+            data={memories}
             user={{ _id: user?._id, role: user?.role }}
             like={likeMemory}
             edit={editMemory}

@@ -41,11 +41,15 @@ const ImageSelect = ({ data, err: errProp, isEdit, name }: ImageSelectProps) => 
         ? "Unfortunately, you cannot edit the cover."
         : "Upload an image";
 
-  const handleOnChange = async (e: File | null) => {
+  const handleOnChange = async (file: File | null) => {
     setErr(false);
     setSuccess(false);
 
-    const base64 = await ImageSelectHandler(e as File);
+    if (!file) {
+      return;
+    }
+
+    const base64 = await ImageSelectHandler(file);
 
     if (!base64) {
       setErr(true);

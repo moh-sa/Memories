@@ -1,8 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
 import { memory, search } from "services";
 import { addUser, removeUser } from "../auth/auth.slice";
-import { cookieExtractor, cookieDestroyer } from "helpers";
+import { cookieExtractor, cookieDestroyer, getApiError, isApiError } from "helpers";
 import type {
   AccessTokenResponse,
   ApiError,
@@ -14,6 +13,18 @@ import type {
   SearchArg,
 } from "types";
 
+function handleAuthTokenError(
+  error: unknown,
+  thunkAPI: { dispatch: (action: unknown) => void },
+): ApiError {
+  const errorData = getApiError(error);
+  if (errorData.accessToken || errorData.refreshToken) {
+    thunkAPI.dispatch(removeUser());
+    cookieDestroyer();
+  }
+  return errorData;
+}
+
 export const getAll = createAsyncThunk<
   MemoriesResponse,
   GetMemoriesArg,
@@ -24,10 +35,7 @@ export const getAll = createAsyncThunk<
     return data;
   }
   catch (error) {
-    if (axios.isAxiosError(error)) {
-      return thunkAPI.rejectWithValue(error.response?.data as ApiError);
-    }
-    return thunkAPI.rejectWithValue(error as ApiError);
+    return thunkAPI.rejectWithValue(getApiError(error));
   }
 });
 
@@ -43,14 +51,7 @@ export const create = createAsyncThunk<
     return data;
   }
   catch (error) {
-    const errorData = axios.isAxiosError(error)
-      ? (error.response?.data as ApiError | undefined)
-      : undefined;
-    if (errorData?.accessToken || errorData?.refreshToken) {
-      thunkAPI.dispatch(removeUser());
-      cookieDestroyer();
-    }
-    return thunkAPI.rejectWithValue(errorData ?? (error as ApiError));
+    return thunkAPI.rejectWithValue(handleAuthTokenError(error, thunkAPI));
   }
 });
 
@@ -66,14 +67,7 @@ export const update = createAsyncThunk<
     return data;
   }
   catch (error) {
-    const errorData = axios.isAxiosError(error)
-      ? (error.response?.data as ApiError | undefined)
-      : undefined;
-    if (errorData?.accessToken || errorData?.refreshToken) {
-      thunkAPI.dispatch(removeUser());
-      cookieDestroyer();
-    }
-    return thunkAPI.rejectWithValue(errorData ?? (error as ApiError));
+    return thunkAPI.rejectWithValue(handleAuthTokenError(error, thunkAPI));
   }
 });
 
@@ -89,14 +83,7 @@ export const _delete = createAsyncThunk<
     return { ...data, ...memoryData };
   }
   catch (error) {
-    const errorData = axios.isAxiosError(error)
-      ? (error.response?.data as ApiError | undefined)
-      : undefined;
-    if (errorData?.accessToken || errorData?.refreshToken) {
-      thunkAPI.dispatch(removeUser());
-      cookieDestroyer();
-    }
-    return thunkAPI.rejectWithValue(errorData ?? (error as ApiError));
+    return thunkAPI.rejectWithValue(handleAuthTokenError(error, thunkAPI));
   }
 });
 
@@ -112,14 +99,7 @@ export const like = createAsyncThunk<
     return data;
   }
   catch (error) {
-    const errorData = axios.isAxiosError(error)
-      ? (error.response?.data as ApiError | undefined)
-      : undefined;
-    if (errorData?.accessToken || errorData?.refreshToken) {
-      thunkAPI.dispatch(removeUser());
-      cookieDestroyer();
-    }
-    return thunkAPI.rejectWithValue(errorData ?? (error as ApiError));
+    return thunkAPI.rejectWithValue(handleAuthTokenError(error, thunkAPI));
   }
 });
 
@@ -133,9 +113,8 @@ export const searchReq = createAsyncThunk<
     return data;
   }
   catch (error) {
-    if (axios.isAxiosError(error)) {
-      return thunkAPI.rejectWithValue(error.response?.data as ApiError);
-    }
-    return thunkAPI.rejectWithValue(error as ApiError);
+    return thunkAPI.rejectWithValue(getApiError(error));
   }
 });
+
+export { isApiError };

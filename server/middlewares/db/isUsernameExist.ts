@@ -1,14 +1,15 @@
 import type { Request, Response, NextFunction } from "express";
 import { userModel } from "../../models/index.js";
+import { getQueryString } from "../../utils/queryParams.js";
 
 export default async function isUsernameExist(
   req: Request,
   res: Response,
   next: NextFunction,
 ) {
-  const nameQuery = req.query.username as string | undefined;
+  const nameQuery = getQueryString(req.query, "username");
   const { username: nameParam } = req.params;
-  const username = nameQuery ? nameQuery : nameParam;
+  const username = nameQuery ?? nameParam;
 
   if (username) {
     const usernameReg = new RegExp(username, "i");

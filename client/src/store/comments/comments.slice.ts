@@ -1,11 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 import * as thunk from "./comments.thunk";
-import { Common } from "components";
-import type { Comment } from "types";
-const NOTIF = Common.Notifications.ID;
+import NOTIF from "components/common/Notifications/WithID";
+import type { Comment as CommentType } from "types";
 
 interface CommentsState {
-  comments: Comment[] | null;
+  comments: CommentType[] | null;
 }
 
 const initialState: CommentsState = {
@@ -44,9 +43,8 @@ const commentsSlice = createSlice({
           "Done!",
           "Thank you! We have recieved your comment.",
         );
-        (state.comments as Comment[]).unshift(
-          action.payload.comment.data.comment,
-        );
+        if (!state.comments) return;
+        state.comments.unshift(action.payload.comment.data.comment);
       })
       // 👆 CREATE
       // 👇 UPDATE
@@ -67,8 +65,10 @@ const commentsSlice = createSlice({
       .addCase(thunk.update.fulfilled, (state, action) => {
         NOTIF.Success("update", "Done!", "Your comment has been updated.");
 
+        if (!state.comments) return;
+
         const data = action.payload.comment.data.comment;
-        state.comments = (state.comments as Comment[]).map(comment =>
+        state.comments = state.comments.map(comment =>
           comment._id === data._id ? data : comment,
         );
       })
@@ -91,8 +91,10 @@ const commentsSlice = createSlice({
       .addCase(thunk._delete.fulfilled, (state, action) => {
         NOTIF.Success("delete", "Done!", "Your comment has been deleted.");
 
+        if (!state.comments) return;
+
         const data = action.payload._id;
-        state.comments = (state.comments as Comment[]).filter(
+        state.comments = state.comments.filter(
           comment => comment._id !== data,
         );
       })
@@ -115,8 +117,10 @@ const commentsSlice = createSlice({
       .addCase(thunk.like.fulfilled, (state, action) => {
         NOTIF.Success("like", "Done!", "");
 
+        if (!state.comments) return;
+
         const data = action.payload.comment.data.comment;
-        state.comments = (state.comments as Comment[]).map(comment =>
+        state.comments = state.comments.map(comment =>
           comment._id === data._id ? data : comment,
         );
       });

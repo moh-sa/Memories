@@ -10,19 +10,26 @@ import { auth } from "services";
 import { Container, Loader, Title, Text } from "@mantine/core";
 // Icons
 import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";
-// Types
-import type { AxiosError } from "axios";
-// Vatiables
+import { getApiError } from "helpers";
+
 const uuidRegex
   = /^[0-9A-F]{8}-[0-9A-F]{4}-[4][0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i;
 
-const pending = {
+type ActivationStatus = "pending" | "failure" | "success";
+
+interface ActivationResult {
+  status: ActivationStatus;
+  title: string;
+  msg: string;
+}
+
+const pending: ActivationResult = {
   status: "pending",
   title: "Hold on",
   msg: "Please wait while we check with the server...",
 };
 
-const failure = {
+const failure: ActivationResult = {
   status: "failure",
   title: "Invalid",
   msg: "The given code is Invalid.\nPlease check your email and try again.",
@@ -46,7 +53,7 @@ const Activation = () => {
   }, 5000);
   const { setTitle } = useTitle();
   // states
-  const [res, setRes] = useState(pending);
+  const [res, setRes] = useState<ActivationResult>(pending);
   const [isSuccess, setIsSuccess] = useState(false);
   // setTitle
   setTitle("Account Activation");
@@ -73,15 +80,13 @@ const Activation = () => {
   };
 
   const verifyCode = async () => {
-    const isCodeValid = uuidRegex.test(code as string);
-
-    if (!isCodeValid) {
+    if (!code || !uuidRegex.test(code)) {
       setRes(failure);
       return;
     }
 
     try {
-      const { data } = await auth.verifyCode(code as string);
+      const { data } = await auth.verifyCode(code);
 
       setRes({
         status: "success",
@@ -92,16 +97,12 @@ const Activation = () => {
       setIsSuccess(true);
     }
     catch (error) {
-      const axiosError = error as AxiosError<{ message: string }>;
-      if (!axiosError.response) {
-        throw error;
-      }
+      const apiError = getApiError(error);
       setRes({
         status: "failure",
         title: "Uh Oh!",
-        msg: axiosError.response.data.message,
+        msg: apiError.message ?? "Activation failed.",
       });
-      return;
     }
   };
 
@@ -123,7 +124,7 @@ const Activation = () => {
     <section className={classes.section}>
       <Container className={classes.Container}>
         <div>
-          <div>{icon[res.status as keyof typeof icon]}</div>
+          <div>{icon[res.status]}</div>
           <div>
             <Title>{res.title}</Title>
           </div>

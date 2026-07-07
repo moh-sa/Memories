@@ -1,11 +1,14 @@
-// Hooks
-import type { ComponentProps, ReactNode } from "react";
-import { useState, useRef, useEffect } from "react";
-// UI Components
-import { RichTextEditor } from "@mantine/rte";
-import type Editor from "react-quill";
+import type { ReactNode } from "react";
+import { useEffect } from "react";
+import { RichTextEditor, Link, useRichTextEditorContext } from "@mantine/tiptap";
+import { useEditor } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
+import Underline from "@tiptap/extension-underline";
+import TextAlign from "@tiptap/extension-text-align";
+import Placeholder from "@tiptap/extension-placeholder";
+import Youtube from "@tiptap/extension-youtube";
 import { Text } from "@mantine/core";
-// Options
+import { TbBrandYoutube } from "react-icons/tb";
 import options from "./options";
 
 interface RichTextEditorMemoryProps {
@@ -14,43 +17,55 @@ interface RichTextEditorMemoryProps {
   initalValue?: string;
 }
 
+function YoutubeControl() {
+  const { editor } = useRichTextEditorContext();
+
+  return (
+    <RichTextEditor.Control
+      onClick={() => {
+        const url = window.prompt("Enter YouTube URL");
+        if (url) {
+          editor.commands.setYoutubeVideo({ src: url });
+        }
+      }}
+      aria-label="Insert YouTube video"
+      title="Insert YouTube video"
+    >
+      <TbBrandYoutube size={16} />
+    </RichTextEditor.Control>
+  );
+}
+
 const Memory = ({
   data: sendData,
   err,
   initalValue = "",
 }: RichTextEditorMemoryProps) => {
-  const [value, setValue] = useState(initalValue);
-  const editorRef = useRef<Editor>(null);
-
-  const handleOnChange = (data: string) => {
-    setValue(data);
-    sendData({
-      body: data,
-      description: (
-        editorRef.current as unknown as { editor: { container: HTMLElement } }
-      ).editor.container.innerText.replaceAll("\n\n", " "),
-    });
-  };
+  const editor = useEditor({
+    extensions: [
+      StarterKit,
+      Underline,
+      Link,
+      TextAlign.configure({ types: ["heading", "paragraph"] }),
+      Placeholder.configure({ placeholder: options.placeholder }),
+      Youtube,
+    ],
+    content: initalValue,
+    onUpdate: ({ editor: currentEditor }) => {
+      sendData({
+        body: currentEditor.getHTML(),
+        description: currentEditor.getText().replaceAll("\n\n", " "),
+      });
+    },
+  });
 
   useEffect(() => {
-    (editorRef.current as Editor).focus();
-  }, []);
+    editor?.commands.focus();
+  }, [editor]);
 
-  // `placeholder` is forwarded to the underlying react-quill instance but is
-  // absent from Mantine's `RichTextEditorProps`; augment the props type so the
-  // pass-through prop type-checks without altering what renders.
-  const rteProps: ComponentProps<typeof RichTextEditor> & {
-    placeholder?: string;
-  } = {
-    value,
-    ref: editorRef,
-    onChange: handleOnChange,
-    controls: options.controls as ComponentProps<
-      typeof RichTextEditor
-    >["controls"],
-    formats: options.formats,
-    placeholder: options.placeholder,
-  };
+  if (!editor) {
+    return null;
+  }
 
   return (
     <div>
@@ -65,7 +80,39 @@ const Memory = ({
         </Text>
       )}
       <div style={{ wordBreak: "break-word" }}>
-        <RichTextEditor {...rteProps} />
+        <RichTextEditor editor={editor}>
+          <RichTextEditor.Toolbar sticky stickyOffset={0}>
+            <RichTextEditor.ControlsGroup>
+              <RichTextEditor.Bold />
+              <RichTextEditor.Italic />
+              <RichTextEditor.Underline />
+              <RichTextEditor.Strikethrough />
+              <RichTextEditor.ClearFormatting />
+            </RichTextEditor.ControlsGroup>
+            <RichTextEditor.ControlsGroup>
+              <RichTextEditor.H1 />
+              <RichTextEditor.H2 />
+              <RichTextEditor.H3 />
+              <RichTextEditor.H4 />
+            </RichTextEditor.ControlsGroup>
+            <RichTextEditor.ControlsGroup>
+              <RichTextEditor.BulletList />
+              <RichTextEditor.OrderedList />
+            </RichTextEditor.ControlsGroup>
+            <RichTextEditor.ControlsGroup>
+              <RichTextEditor.AlignLeft />
+              <RichTextEditor.AlignCenter />
+              <RichTextEditor.AlignRight />
+            </RichTextEditor.ControlsGroup>
+            <RichTextEditor.ControlsGroup>
+              <RichTextEditor.Link />
+              <RichTextEditor.Unlink />
+              <YoutubeControl />
+              <RichTextEditor.Blockquote />
+            </RichTextEditor.ControlsGroup>
+          </RichTextEditor.Toolbar>
+          <RichTextEditor.Content />
+        </RichTextEditor>
       </div>
     </div>
   );

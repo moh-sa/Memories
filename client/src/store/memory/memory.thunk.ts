@@ -1,8 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
 import { memory } from "services";
 import { addUser, removeUser } from "../auth/auth.slice";
-import { cookieExtractor, cookieDestroyer } from "helpers";
+import { cookieExtractor, cookieDestroyer, getApiError } from "helpers";
 import type {
   ApiError,
   GetSingleMemoryArg,
@@ -10,6 +9,18 @@ import type {
   MemoryMutationResponse,
   MemoryResponse,
 } from "types";
+
+function handleAuthTokenError(
+  error: unknown,
+  thunkAPI: { dispatch: (action: unknown) => void },
+): ApiError {
+  const errorData = getApiError(error);
+  if (errorData.accessToken || errorData.refreshToken) {
+    thunkAPI.dispatch(removeUser());
+    cookieDestroyer();
+  }
+  return errorData;
+}
 
 export const getSingle = createAsyncThunk<
   MemoryResponse,
@@ -21,10 +32,7 @@ export const getSingle = createAsyncThunk<
     return data;
   }
   catch (error) {
-    if (axios.isAxiosError(error)) {
-      return thunkAPI.rejectWithValue(error.response?.data as ApiError);
-    }
-    return thunkAPI.rejectWithValue(error as ApiError);
+    return thunkAPI.rejectWithValue(getApiError(error));
   }
 });
 
@@ -40,13 +48,6 @@ export const like = createAsyncThunk<
     return data;
   }
   catch (error) {
-    const errorData = axios.isAxiosError(error)
-      ? (error.response?.data as ApiError | undefined)
-      : undefined;
-    if (errorData?.accessToken || errorData?.refreshToken) {
-      thunkAPI.dispatch(removeUser());
-      cookieDestroyer();
-    }
-    return thunkAPI.rejectWithValue(errorData ?? (error as ApiError));
+    return thunkAPI.rejectWithValue(handleAuthTokenError(error, thunkAPI));
   }
 });

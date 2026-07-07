@@ -1,4 +1,3 @@
-// UI Components
 import { Pagination as PaginationCom } from "@mantine/core";
 
 interface PaginationProps {
@@ -12,6 +11,8 @@ const Pagination = ({
   numberOfPages,
   onPageChange,
 }: PaginationProps) => {
+  const page = Number(currentPage) || 1;
+
   return (
     <PaginationCom
       mt={60}
@@ -20,8 +21,8 @@ const Pagination = ({
       withControls
       spacing="sm"
       position="center"
-      page={currentPage as number}
-      total={parseInt(numberOfPages as unknown as string)}
+      page={page}
+      total={numberOfPages ?? 1}
       onChange={onPageChange}
     />
   );

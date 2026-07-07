@@ -5,7 +5,17 @@ import { helpers } from "../../utils/index.js";
 import type { AuthUser } from "../../types/express.js";
 
 export default function (req: Request, res: Response) {
-  const { _id, username, role, avatar } = req.localData as AuthUser;
+  const authUser = req.localData;
+
+  if (!authUser || !("_id" in authUser)) {
+    return res.status(500).json({
+      statusCode: 500,
+      from: "controllers/auth/login",
+      message: "Authenticated user data is missing.",
+    });
+  }
+
+  const { _id, username, role, avatar } = authUser;
   const userId = _id.toString();
   const userData: AuthUser = { _id, username, role, avatar };
 

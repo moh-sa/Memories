@@ -1,7 +1,6 @@
 // Hooks
 import { useState, useEffect } from "react";
 import { useStyles } from "./styles";
-import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { useTitle, useLocalStorage } from "Hooks";
@@ -11,9 +10,9 @@ import { searchReq, like, _delete } from "store/memories/memories.thunk";
 import { Common, MainPage } from "components";
 import { Container, Title, Text, Button } from "@mantine/core";
 // Types
-import type { AppDispatch, RootState } from "store/store";
+import type { RootState } from "store/store";
+import { useAppDispatch, useAppSelector } from "store/hooks";
 import type {
-  ApiError,
   DeleteMemoryArg,
   LikeMemoryArg,
   Memory,
@@ -23,7 +22,7 @@ import type {
 const Search = () => {
   // Hookes
   const { classes } = useStyles();
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
   const { set } = useLocalStorage();
   const navigate = useNavigate();
   const { search } = useLocation();
@@ -32,16 +31,17 @@ const Search = () => {
   // states
   const [isLoading, setIsLoading] = useState(true);
   // Selectors
-  const data = useSelector((state: RootState) => state.memories);
-  const { user } = useSelector((state: RootState) => state.auth);
+  const data = useAppSelector((state: RootState) => state.memories);
+  const { user } = useAppSelector((state: RootState) => state.auth);
   // Variables
   const getQuery = searchParams.get("query");
   const getTags = searchParams.get("tags");
   const getPage = searchParams.get("page");
   const currentPage = getPage ? getPage : 1;
+  const memories = data.memories;
   // Checkers
-  const isReady = data.memories !== null;
-  const isExists = (data.memories?.length as number) > 0;
+  const isReady = memories !== null;
+  const isExists = Boolean(memories?.length);
   // setTitle
   if (getQuery) {
     setTitle(`${getQuery} search results`);
@@ -50,8 +50,8 @@ const Search = () => {
     setTitle(`${getTags} search results`);
   }
 
-  const handleOnPageChange = (data: number) => {
-    setSearchParams({ page: data as unknown as string });
+  const handleOnPageChange = (page: number) => {
+    setSearchParams({ page: String(page) });
   };
 
   const likeMemory = async (data: LikeMemoryArg) => {
@@ -72,11 +72,10 @@ const Search = () => {
     const query = getQuery ? getQuery : "none";
     const tags = getTags ? getTags : "none";
 
-    const { payload } = await dispatch(searchReq({ page, query, tags }));
-    const errorPayload = payload as ApiError | undefined;
-    if (errorPayload?.statusCode === 404) {
-      navigate(`/${errorPayload.statusCode}`, {
-        state: { code: errorPayload.statusCode, msg: errorPayload.message },
+    const result = await dispatch(searchReq({ page, query, tags }));
+    if (searchReq.rejected.match(result) && result.payload?.statusCode === 404) {
+      navigate(`/${result.payload.statusCode}`, {
+        state: { code: result.payload.statusCode, msg: result.payload.message },
       });
     }
 
@@ -119,7 +118,7 @@ const Search = () => {
         {isReady && isExists && (
           <>
             <MainPage.Memories
-              data={data.memories as Memory[]}
+              data={memories}
               user={{ _id: user?._id, role: user?.role }}
               like={likeMemory}
               edit={editMemory}

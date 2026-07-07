@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { TextInput } from "@mantine/core";
-import { useFormContext, Controller } from "react-hook-form";
+import { useFormContext, Controller, type FieldValues } from "react-hook-form";
 
 interface TextProps {
   name: string;
@@ -25,7 +25,9 @@ const Text = ({
     trigger,
     control,
     formState: { errors },
-  } = useFormContext();
+  } = useFormContext<FieldValues>();
+
+  const errorMessage = errors[name]?.message;
 
   return (
     <Controller
@@ -42,10 +44,10 @@ const Text = ({
           placeholder={holder}
           description={desc}
           icon={icon}
-          error={errors[name]?.message as string | undefined}
+          error={typeof errorMessage === "string" ? errorMessage : undefined}
           onBlur={(e) => {
             void trigger(e.target.name);
-            (field.onBlur as (event: unknown) => void)(e);
+            field.onBlur();
           }}
         />
       )}

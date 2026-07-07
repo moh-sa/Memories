@@ -4,12 +4,8 @@ import { Link, useLocation } from "react-router-dom";
 import { useTitle } from "Hooks";
 // UI Components
 import { Container, Title, Text, Button, Group } from "@mantine/core";
-// Types
-interface MissingLocationState {
-  code?: number;
-  msg?: string;
-}
-// Variables
+import { getMissingLocationState } from "helpers";
+
 const defautValues = {
   code: 404,
   title: "You have found a secret place.",
@@ -22,7 +18,7 @@ const Missing = () => {
   const location = useLocation();
   const { setTitle } = useTitle();
   // Variables
-  const state = location.state as MissingLocationState | null;
+  const state = getMissingLocationState(location.state);
   const code = state?.code ? state.code : defautValues.code;
   const title = state?.code ? "Uh Oh!" : defautValues.title;
   const msg = state?.msg ? state.msg : defautValues.msg;

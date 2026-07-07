@@ -1,43 +1,42 @@
 // Packages
-import { yupResolver } from "@hookform/resolvers/yup";
 // Hooks
 import { useStyles } from "./styles";
 import { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
 import { useNavigate, Navigate } from "react-router-dom";
 import { useForm, FormProvider } from "react-hook-form";
-import type { FieldValues } from "react-hook-form";
 import { useTitle, useLocalStorage } from "Hooks";
 // Actions
 import { update } from "store/memories/memories.thunk";
 // Helpers
-import { tagsHandler, descriptionHandler } from "helpers";
+import { tagsHandler, descriptionHandler, typedYupResolver, isMemory } from "helpers";
 // rules
 import { memorySchema } from "rules";
 // UI Components
 import { Common } from "components";
+import RichTextEditorMemory from "components/common/UncontrolledFields/RichTextEditor/Memory/Memory";
 import { Stack, Paper, Button, Title, Container } from "@mantine/core";
 // Icons
 import { TbPencil, TbSend } from "react-icons/tb";
 // Types
-import type { AppDispatch } from "store/store";
-import type { Memory, MemoryMutationResponse } from "types";
+import { useAppDispatch } from "store/hooks";
+import type { Memory, MemoryEditFormValues } from "types";
 
-const Create = () => {
+const Edit = () => {
   // Hookes
   const { classes } = useStyles();
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { get, remove } = useLocalStorage();
   const { setTitle } = useTitle();
   // States
+  const storedEditData = get("editMemory");
   const [editData] = useState<Memory | null>(
-    get("editMemory") as Memory | null,
+    isMemory(storedEditData) ? storedEditData : null,
   );
   const [isLoading, setIsLoading] = useState(false);
   // useForm
-  const methods = useForm({
-    resolver: yupResolver(memorySchema.edit),
+  const methods = useForm<MemoryEditFormValues>({
+    resolver: typedYupResolver(memorySchema.edit),
   });
   // setTitle
   if (editData) {
@@ -49,23 +48,22 @@ const Create = () => {
     methods.setValue("description", e.description);
   };
 
-  const handleOnSubmit = async (e: FieldValues) => {
+  const handleOnSubmit = async (formData: MemoryEditFormValues) => {
     if (!editData) return;
 
     setIsLoading(true);
 
     const updatedMemory: Memory = {
       ...editData,
-      title: e.title as string,
-      description: descriptionHandler(e.description as string),
-      tags: tagsHandler(e.tags as string[]),
-      body: e.body as string,
+      title: formData.title,
+      description: descriptionHandler(formData.description ?? ""),
+      tags: tagsHandler(formData.tags),
+      body: formData.body,
     };
     delete updatedMemory.coverURL;
 
-    const { payload } = await dispatch(update(updatedMemory));
-    const successPayload = payload as MemoryMutationResponse | undefined;
-    if (successPayload?.memory) {
+    const result = await dispatch(update(updatedMemory));
+    if (update.fulfilled.match(result)) {
       remove("editMemory");
       navigate("/");
     }
@@ -74,7 +72,7 @@ const Create = () => {
 
   useEffect(() => {
     methods.register("description");
-  }, []);
+  }, [methods]);
 
   useEffect(() => {
     if (editData) {
@@ -82,7 +80,7 @@ const Create = () => {
       methods.setValue("tags", editData.tags);
       methods.setValue("body", editData.body);
     }
-  }, []);
+  }, [editData, methods]);
 
   return (
     <section className={classes.section}>
@@ -103,21 +101,14 @@ const Create = () => {
                     label="Title"
                     holder="Your memory's title"
                     icon={<TbPencil />}
-                    // initalValue={isEdit && get("editMemory").title}
                   />
                   {/* Tags */}
-                  <Common.ControlledFields.Tags
-                  // initalValue={isEdit && get("editMemory").tags}
-                  />
+                  <Common.ControlledFields.Tags />
                   {/* Body */}
                   <div>
-                    <Common.UncontrolledFields.RichTextEditor.Memory
+                    <RichTextEditorMemory
                       data={handleBodyOnChange}
-                      err={
-                        methods.formState.errors.body?.message as
-                        | string
-                        | undefined
-                      }
+                      err={methods.formState.errors.body?.message}
                       initalValue={editData.body}
                     />
                   </div>
@@ -141,4 +132,4 @@ const Create = () => {
   );
 };
 
-export default Create;
+export default Edit;

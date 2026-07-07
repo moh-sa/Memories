@@ -1,5 +1,4 @@
 // Hooks
-import type { ComponentProps } from "react";
 import { useStyles } from "./styes";
 import { useSelector } from "react-redux";
 // Components
@@ -19,9 +18,7 @@ const Header = () => {
   const auth = useSelector((state: RootState) => state.auth);
 
   return (
-    <HeaderCom
-      {...({ py: "sm" } as unknown as ComponentProps<typeof HeaderCom>)}
-    >
+    <HeaderCom height={60} py="sm">
       <Container>
         <Grid>
           <Grid.Col span={4} style={{ margin: "auto 0" }}>

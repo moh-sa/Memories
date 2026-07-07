@@ -2,6 +2,7 @@ import type { Request, Response } from "express";
 import { memoryModel, commentModel } from "../../models/index.js";
 import { helpers } from "../../utils/index.js";
 import { imgConfig } from "../../configs/index.js";
+import { getQueryString } from "../../utils/queryParams.js";
 
 interface LeanMemory {
   _id: string;
@@ -12,9 +13,9 @@ interface LeanMemory {
 }
 
 export default async function search(req: Request, res: Response) {
-  const query = req.query.query as string;
-  const tags = req.query.tags as string;
-  const page = req.query.page as string;
+  const query = getQueryString(req.query, "query") ?? "";
+  const tags = getQueryString(req.query, "tags") ?? "";
+  const page = getQueryString(req.query, "page") ?? "1";
   const title = new RegExp(query, "i");
   const updatedTags = tags.toLowerCase().split(",");
 

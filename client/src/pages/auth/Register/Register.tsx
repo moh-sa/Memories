@@ -1,5 +1,4 @@
 // Packages
-import { yupResolver } from "@hookform/resolvers/yup";
 // Hooks
 import { useStyles } from "./styles";
 import { useState } from "react";
@@ -21,10 +20,9 @@ import { FiUser } from "react-icons/fi";
 import { MdAlternateEmail } from "react-icons/md";
 // Validations
 import { registerSchema } from "rules";
+import { getApiError, typedYupResolver } from "helpers";
 // Types
-import type { AxiosError } from "axios";
-import type { FieldValues } from "react-hook-form";
-import type { ApiError, RegisterRequest } from "types";
+import type { RegisterFormValues } from "types";
 
 const Register = () => {
   // hooks
@@ -38,8 +36,8 @@ const Register = () => {
   // setTitle
   setTitle("Register");
 
-  const methods = useForm({
-    resolver: yupResolver(registerSchema),
+  const methods = useForm<RegisterFormValues>({
+    resolver: typedYupResolver(registerSchema),
     defaultValues: {
       username: "",
       email: "",
@@ -50,15 +48,22 @@ const Register = () => {
 
   const handleImageSelect = (data: string | ArrayBuffer) => {
     methods.register("avatar");
-    methods.setValue("avatar", data);
+    if (typeof data === "string") {
+      methods.setValue("avatar", data);
+    }
   };
 
-  const onSubmit = async (data: FieldValues) => {
+  const onSubmit = async (data: RegisterFormValues) => {
     setShowResMsg(false);
     setIsLoading(true);
 
     try {
-      const response = await auth.register(data as RegisterRequest);
+      const response = await auth.register({
+        username: data.username,
+        email: data.email,
+        password: data.password,
+        avatar: typeof data.avatar === "string" ? data.avatar : undefined,
+      });
 
       navigate("/login", {
         state: { isRegister: true, message: response.data.message },
@@ -67,13 +72,13 @@ const Register = () => {
       methods.reset();
     }
     catch (error) {
-      const err = error as AxiosError<ApiError>;
+      const apiError = getApiError(error);
       const msg
-        = err.code === "ERR_NETWORK"
+        = apiError.code === "ERR_NETWORK"
           ? "Cannot connect to the server. Please check your connection."
-          : err.response?.data.message;
+          : apiError.message ?? "Registration failed.";
 
-      setResMsg(msg as string);
+      setResMsg(msg);
       setShowResMsg(true);
     }
     finally {
@@ -139,11 +144,7 @@ const Register = () => {
                 <Common.UncontrolledFields.ImageSelect
                   name="Avatar"
                   data={handleImageSelect}
-                  err={
-                    methods.formState.errors.cover?.message as
-                    | string
-                    | undefined
-                  }
+                  err={methods.formState.errors.avatar?.message}
                 />
               </Stack>
             </FormProvider>

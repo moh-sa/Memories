@@ -2,14 +2,15 @@ import type { Request, Response } from "express";
 import { commentModel } from "../../models/index.js";
 import { helpers } from "../../utils/index.js";
 import { imgConfig } from "../../configs/index.js";
+import { getQueryString } from "../../utils/queryParams.js";
 
 interface LeanPopulatedComment {
   author: { avatar: string; avatarURL?: string };
 }
 
 export default async function getAll(req: Request, res: Response) {
-  const _id = req.query._id as string | undefined;
-  const userId = req.query.userId as string | undefined;
+  const _id = getQueryString(req.query, "_id");
+  const userId = getQueryString(req.query, "userId");
   const query = _id ? { memoryId: _id } : { author: userId };
 
   try {

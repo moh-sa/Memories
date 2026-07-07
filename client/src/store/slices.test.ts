@@ -1,13 +1,4 @@
-import { describe, it, expect, vi } from "vitest";
-
-vi.mock("components", () => ({
-  Common: {
-    Notifications: {
-      ID: { Pending: vi.fn(), Failure: vi.fn(), Success: vi.fn() },
-      noID: { Success: vi.fn(), Failure: vi.fn() },
-    },
-  },
-}));
+import { describe, it, expect } from "vitest";
 
 import authReducer, { addUser, removeUser } from "./auth/auth.slice";
 import memoryReducer from "./memory/memory.slice";

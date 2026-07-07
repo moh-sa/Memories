@@ -2,9 +2,21 @@ import type { Request, Response } from "express";
 import { commentModel } from "../../models/index.js";
 import { helpers } from "../../utils/index.js";
 import { imgConfig } from "../../configs/index.js";
+import {
+  isCommentCreateBody,
+  isPopulatedAuthor,
+} from "../../utils/requestBody.js";
 
 export default async function create(req: Request, res: Response) {
-  const data = req.body as { body: string; memoryId: string; author: string };
+  if (!isCommentCreateBody(req.body)) {
+    return res.status(400).json({
+      statusCode: 400,
+      from: "controllers/comment/create 0",
+      message: "Invalid comment payload.",
+    });
+  }
+
+  const data = req.body;
 
   const response = helpers.tokenResponse(
     res.locals.accessToken,
@@ -13,19 +25,22 @@ export default async function create(req: Request, res: Response) {
 
   try {
     const comment = new commentModel(data);
-    await comment
-      .save()
-      .then(res => res.populate("author", "username avatar"));
+    await comment.save();
 
-    const newComment = (await JSON.parse(JSON.stringify(comment))) as {
-      author: { avatarURL?: string };
-    };
-    // note: `author` is populated on the saved document; the original `comment`
-    // types `author` as an ObjectId, so cast to read the populated avatar.
-    newComment.author.avatarURL = helpers.genImageURL(
-      (comment.author as unknown as { avatar: string }).avatar,
-      imgConfig.avatar,
-    );
+    const populatedComment = await commentModel
+      .findById(comment._id)
+      .populate("author", "username avatar");
+
+    if (!populatedComment) {
+      throw new Error("Failed to load created comment.");
+    }
+
+    const newComment = populatedComment.toObject();
+    const { author } = newComment;
+
+    if (isPopulatedAuthor(author)) {
+      author.avatarURL = helpers.genImageURL(author.avatar, imgConfig.avatar);
+    }
 
     res.status(200).json({
       accessToken: response,

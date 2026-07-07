@@ -6,15 +6,13 @@ import { openSpotlight } from "@mantine/spotlight";
 import { UnstyledButton, Group, Text } from "@mantine/core";
 // Icons
 import { TbSearch } from "react-icons/tb";
-// Types
-import type { MouseEventHandler } from "react";
 
 const Desk = () => {
   const { classes } = useStyles();
   return (
     <UnstyledButton
       className={classes.desktop}
-      onClick={openSpotlight as unknown as MouseEventHandler<HTMLButtonElement>}
+      onClick={() => { openSpotlight(); }}
     >
       <Group position="apart">
         <Group>

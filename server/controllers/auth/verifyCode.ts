@@ -1,8 +1,18 @@
 import type { Request, Response } from "express";
 import { userModel } from "../../models/index.js";
+import { getQueryString } from "../../utils/queryParams.js";
 
 export default async function verifyCode(req: Request, res: Response) {
-  const code = req.query.code as string;
+  const code = getQueryString(req.query, "code");
+
+  if (!code) {
+    return res.status(404).json({
+      statusCode: 404,
+      from: "controllers/auth/verifyCode 1",
+      message:
+        "We couldn't verify this activation code in the database.\nPlease Check your email and try again.",
+    });
+  }
 
   const user = await userModel
     .findOne({ activationCode: code })

@@ -4,7 +4,8 @@ import { useState } from "react";
 // Components
 import { Link } from "react-router-dom";
 // UI Components
-import { Common } from "components";
+import Badges from "components/common/Badges";
+import Modals from "components/common/Modals";
 import { UserInfo } from "./subComponents";
 import { Card, Text, Image, Button, Box, Anchor } from "@mantine/core";
 // Icons
@@ -46,7 +47,7 @@ const Memory = ({ data, user, like, edit, _delete }: MemoryCardProps) => {
     </Text>
   ));
 
-  const likeIcon = data.likes.includes(user._id as string)
+  const likeIcon = user._id !== undefined && data.likes.includes(user._id)
     ? (
         <AiFillHeart size={18} color="red" />
       )
@@ -83,19 +84,19 @@ const Memory = ({ data, user, like, edit, _delete }: MemoryCardProps) => {
 
         {/* Badges */}
         {/* Likes */}
-        <Common.Badges.Likes
+        <Badges.Likes
           badgeStyles={`${classes.badge} ${classes.like}`}
           likesStyles={classes.likes}
           likes={data.likes.length}
         />
         {/* Time */}
-        <Common.Badges.Time
+        <Badges.Time
           badgeStyles={`${classes.badge} ${classes.time}`}
           likesStyles={classes.likes}
           time={data.createdAt}
         />
         {/* Comments */}
-        <Common.Badges.Comments
+        <Badges.Comments
           badgeStyles={`${classes.badge} ${classes.comments}`}
           likesStyles={classes.likes}
           data={data.numberOfComments}
@@ -169,7 +170,7 @@ const Memory = ({ data, user, like, edit, _delete }: MemoryCardProps) => {
           </Card.Section>
         )}
       </Card>
-      <Common.Modals.Delete
+      <Modals.Delete
         open={isModelOpened}
         close={() => { setIsModelOpened(false); }}
         yes={handleDelete}

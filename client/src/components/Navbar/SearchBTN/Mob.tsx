@@ -6,8 +6,6 @@ import { openSpotlight } from "@mantine/spotlight";
 import { ActionIcon } from "@mantine/core";
 // Icons
 import { TbSearch } from "react-icons/tb";
-// Types
-import type { MouseEventHandler } from "react";
 
 const Mob = () => {
   const { classes } = useStyles();
@@ -15,7 +13,7 @@ const Mob = () => {
     <ActionIcon
       className={classes.mobile}
       variant="light"
-      onClick={openSpotlight as unknown as MouseEventHandler<HTMLButtonElement>}
+      onClick={() => { openSpotlight(); }}
     >
       <TbSearch size={20} />
     </ActionIcon>

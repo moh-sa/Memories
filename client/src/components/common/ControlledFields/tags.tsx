@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { memory } from "services";
 // UI Components
 import { MultiSelect } from "@mantine/core";
-import { useFormContext, Controller } from "react-hook-form";
+import { useFormContext, Controller, type FieldValues } from "react-hook-form";
 // Icons
 import { TbTags } from "react-icons/tb";
 
@@ -16,7 +16,9 @@ const Tags = ({ initalValue = [] }: { initalValue?: string[] }) => {
     trigger,
     control,
     formState: { errors },
-  } = useFormContext();
+  } = useFormContext<FieldValues>();
+
+  const errorMessage = errors.tags?.message;
 
   const handleGetTags = async () => {
     setIsLoading(true);
@@ -46,29 +48,29 @@ const Tags = ({ initalValue = [] }: { initalValue?: string[] }) => {
       render={({ field }) => (
         <MultiSelect
           required
-          clearable // add a X button on the right to clear the field.
-          creatable // the ability to add new tags
-          searchable // the ability to search for a certain tag
+          clearable
+          creatable
+          searchable
           disabled={isLoading}
           name={field.name}
           label="Tags"
           placeholder="Select or enter 3 tags"
           description="Select at least one tag"
           icon={<TbTags size={18} />}
-          data={tags} // take an array of data to auto complete
-          limit={5} // number of suggestions at the same time
-          maxSelectedValues={3} // max number of tags
+          data={tags}
+          limit={5}
+          maxSelectedValues={3}
           maxDropdownHeight={160}
           clearButtonLabel="Clear selection"
-          getCreateLabel={query => `+ Create ${query}`} // text shown when adding new tag
-          error={errors.tags?.message as string | undefined}
-          onBlur={(e) => {
+          getCreateLabel={query => `+ Create ${query}`}
+          error={typeof errorMessage === "string" ? errorMessage : undefined}
+          onBlur={() => {
             void trigger("tags");
-            (field.onBlur as (event: unknown) => void)(e);
+            field.onBlur();
           }}
-          onChange={(e) => { field.onChange(e); }}
-          ref={(e) => { field.ref(e); }}
-          value={((e: unknown) => (field.value as (arg: unknown) => string[])(e)) as unknown as string[]}
+          onChange={field.onChange}
+          ref={field.ref}
+          value={Array.isArray(field.value) ? field.value : []}
         />
       )}
     />

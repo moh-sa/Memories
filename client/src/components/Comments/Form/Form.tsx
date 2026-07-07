@@ -1,10 +1,9 @@
 // Packages
-import { yupResolver } from "@hookform/resolvers/yup";
 // Hooks
 import { useStyles } from "./styles";
 import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { useForm, FormProvider, type FieldValues } from "react-hook-form";
+import { useForm, FormProvider } from "react-hook-form";
 import { useLocalStorage, useDisclosure } from "@mantine/hooks";
 import type { AppDispatch } from "store/store";
 import type { Comment, User } from "types";
@@ -13,7 +12,9 @@ import { create, update } from "store/comments/comments.thunk";
 // rules
 import { commentSchema } from "rules";
 // UI Components
-import { Common } from "components";
+import ControlledFields from "components/common/ControlledFields";
+import { typedYupResolver } from "helpers";
+import type { CommentFormValues } from "types";
 import { Text, Paper, Group, Button } from "@mantine/core";
 // Icons
 import { TbPlus, TbSend, TbX } from "react-icons/tb";
@@ -36,20 +37,26 @@ const Form = ({ memoryId, user }: FormProps) => {
   // checkers
   const isEdit = localValue ? true : false;
   // useForm
-  const methods = useForm({ resolver: yupResolver(commentSchema) });
+  const methods = useForm<CommentFormValues>({
+    resolver: typedYupResolver(commentSchema),
+  });
 
-  const handleOnSubmit = async (data: FieldValues) => {
+  const handleOnSubmit = async (formData: CommentFormValues) => {
     setIsLoading(true);
 
     if (!isEdit) {
-      const commentData = { body: data.comment as string, author: user._id, memoryId };
+      const commentData = {
+        body: formData.comment,
+        author: user._id,
+        memoryId,
+      };
 
       await dispatch(create(commentData));
     }
-    else {
+    else if (localValue) {
       const updatedComment = {
-        ...(localValue as Comment),
-        body: data.comment as string,
+        ...localValue,
+        body: formData.comment,
       };
 
       await dispatch(update(updatedComment));
@@ -62,9 +69,9 @@ const Form = ({ memoryId, user }: FormProps) => {
   };
 
   useEffect(() => {
-    if (isEdit) {
+    if (isEdit && localValue) {
       handlers.open();
-      methods.setValue("comment", (localValue as Comment).body);
+      methods.setValue("comment", localValue.body);
     }
   }, [localValue]);
 
@@ -98,7 +105,7 @@ const Form = ({ memoryId, user }: FormProps) => {
           <div className={classes.form}>
             <FormProvider {...methods}>
               {/* Textarea */}
-              <Common.ControlledFields.Textarea
+              <ControlledFields.Textarea
                 name="comment"
                 label="Your Comment"
                 holder={`What is on your mind, ${user.username}?`}

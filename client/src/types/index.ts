@@ -188,6 +188,26 @@ export interface CreateCommentArg {
   memoryId?: string;
 }
 
+export interface CommentFormValues {
+  comment: string;
+}
+
+export interface MemoryCreateFormValues {
+  title: string;
+  tags: string[];
+  cover: string;
+  body: string;
+  description?: string;
+  author?: string;
+}
+
+export interface MemoryEditFormValues {
+  title: string;
+  tags: string[];
+  body: string;
+  description?: string;
+}
+
 export interface LikeCommentArg {
   _id: string;
   userId?: string;

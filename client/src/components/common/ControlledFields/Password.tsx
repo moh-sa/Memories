@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { PasswordInput } from "@mantine/core";
-import { useFormContext, Controller } from "react-hook-form";
+import { useFormContext, Controller, type FieldValues } from "react-hook-form";
 import { RiLockPasswordLine } from "react-icons/ri";
 
 interface PasswordProps {
@@ -15,7 +15,9 @@ const Password = ({ name, label, holder, desc }: PasswordProps) => {
     trigger,
     control,
     formState: { errors },
-  } = useFormContext();
+  } = useFormContext<FieldValues>();
+
+  const errorMessage = errors[name]?.message;
 
   return (
     <Controller
@@ -31,10 +33,10 @@ const Password = ({ name, label, holder, desc }: PasswordProps) => {
           placeholder={holder}
           description={desc}
           icon={<RiLockPasswordLine />}
-          error={errors[name]?.message as string | undefined}
+          error={typeof errorMessage === "string" ? errorMessage : undefined}
           onBlur={(e) => {
             void trigger(e.target.name);
-            (field.onBlur as (event: unknown) => void)(e);
+            field.onBlur();
           }}
         />
       )}

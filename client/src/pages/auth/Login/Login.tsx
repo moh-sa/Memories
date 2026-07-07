@@ -1,10 +1,9 @@
 // Packages
 import { loginSchema } from "rules";
-import { yupResolver } from "@hookform/resolvers/yup";
+import { typedYupResolver, getLoginLocationState } from "helpers";
 // Hooks
 import { useStyles } from "./styles";
 import { useState } from "react";
-import { useDispatch } from "react-redux";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useTitle } from "Hooks";
@@ -21,23 +20,16 @@ import { Common } from "components";
 import { TbSend } from "react-icons/tb";
 import { MdAlternateEmail } from "react-icons/md";
 // Types
-import type { FieldValues } from "react-hook-form";
-import type { AppDispatch } from "store/store";
-import type { ApiError, LoginRequest } from "types";
-
-interface LoginLocationState {
-  form?: { pathname?: string };
-  isRegister?: boolean;
-  message: string;
-}
+import { useAppDispatch } from "store/hooks";
+import type { LoginFormValues } from "types";
 
 const Login = () => {
   // hooks
   const { classes } = useStyles();
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const location = useLocation();
-  const state = location.state as LoginLocationState | null;
+  const state = getLoginLocationState(location.state);
   const { setTitle } = useTitle();
   // states
   const [isLoading, setIsLoading] = useState(false);
@@ -48,26 +40,26 @@ const Login = () => {
   // setTitle
   setTitle("Login");
 
-  const methods = useForm({
-    resolver: yupResolver(loginSchema),
+  const methods = useForm<LoginFormValues>({
+    resolver: typedYupResolver(loginSchema),
     defaultValues: {
       email: "",
       password: "",
     },
   });
 
-  const onSubmit = async (data: FieldValues) => {
+  const onSubmit = async (data: LoginFormValues) => {
     setShowResMsg(false);
     setIsLoading(true);
-    const { payload } = await dispatch(login(data as LoginRequest));
-    const errorPayload = payload as ApiError | undefined;
+    const result = await dispatch(login(data));
 
-    if (errorPayload?.code || errorPayload?.statusCode) {
+    if (login.rejected.match(result)) {
+      const errorPayload = result.payload;
       const msg
-        = errorPayload.code === "ERR_NETWORK"
+        = errorPayload?.code === "ERR_NETWORK"
           ? "Cannot connect to the server. Please check your connection."
-          : errorPayload.message;
-      setResMsg(msg as string);
+          : errorPayload?.message ?? "Login failed.";
+      setResMsg(msg);
       setShowResMsg(true);
     }
     else {

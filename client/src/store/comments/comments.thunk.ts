@@ -1,8 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
 import { comments } from "services";
 import { addUser, removeUser } from "../auth/auth.slice";
-import { cookieExtractor, cookieDestroyer } from "helpers";
+import { cookieExtractor, cookieDestroyer, getApiError } from "helpers";
 import type {
   ApiError,
   CommentLikeResponse,
@@ -14,6 +13,18 @@ import type {
   LikeCommentArg,
 } from "types";
 
+function handleAuthTokenError(
+  error: unknown,
+  thunkAPI: { dispatch: (action: unknown) => void },
+): ApiError {
+  const errorData = getApiError(error);
+  if (errorData.accessToken || errorData.refreshToken) {
+    thunkAPI.dispatch(removeUser());
+    cookieDestroyer();
+  }
+  return errorData;
+}
+
 export const getAll = createAsyncThunk<
   CommentsResponse,
   GetCommentsArg,
@@ -24,14 +35,7 @@ export const getAll = createAsyncThunk<
     return data;
   }
   catch (error) {
-    const errorData = axios.isAxiosError(error)
-      ? (error.response?.data as ApiError | undefined)
-      : undefined;
-    if (errorData?.accessToken || errorData?.refreshToken) {
-      thunkAPI.dispatch(removeUser());
-      cookieDestroyer();
-    }
-    return thunkAPI.rejectWithValue(errorData ?? (error as ApiError));
+    return thunkAPI.rejectWithValue(handleAuthTokenError(error, thunkAPI));
   }
 });
 
@@ -47,14 +51,7 @@ export const create = createAsyncThunk<
     return data;
   }
   catch (error) {
-    const errorData = axios.isAxiosError(error)
-      ? (error.response?.data as ApiError | undefined)
-      : undefined;
-    if (errorData?.accessToken || errorData?.refreshToken) {
-      thunkAPI.dispatch(removeUser());
-      cookieDestroyer();
-    }
-    return thunkAPI.rejectWithValue(errorData ?? (error as ApiError));
+    return thunkAPI.rejectWithValue(handleAuthTokenError(error, thunkAPI));
   }
 });
 
@@ -70,14 +67,7 @@ export const update = createAsyncThunk<
     return data;
   }
   catch (error) {
-    const errorData = axios.isAxiosError(error)
-      ? (error.response?.data as ApiError | undefined)
-      : undefined;
-    if (errorData?.accessToken || errorData?.refreshToken) {
-      thunkAPI.dispatch(removeUser());
-      cookieDestroyer();
-    }
-    return thunkAPI.rejectWithValue(errorData ?? (error as ApiError));
+    return thunkAPI.rejectWithValue(handleAuthTokenError(error, thunkAPI));
   }
 });
 
@@ -93,14 +83,7 @@ export const _delete = createAsyncThunk<
     return _id;
   }
   catch (error) {
-    const errorData = axios.isAxiosError(error)
-      ? (error.response?.data as ApiError | undefined)
-      : undefined;
-    if (errorData?.accessToken || errorData?.refreshToken) {
-      thunkAPI.dispatch(removeUser());
-      cookieDestroyer();
-    }
-    return thunkAPI.rejectWithValue(errorData ?? (error as ApiError));
+    return thunkAPI.rejectWithValue(handleAuthTokenError(error, thunkAPI));
   }
 });
 
@@ -114,13 +97,6 @@ export const like = createAsyncThunk<
     return data;
   }
   catch (error) {
-    const errorData = axios.isAxiosError(error)
-      ? (error.response?.data as ApiError | undefined)
-      : undefined;
-    if (errorData?.accessToken || errorData?.refreshToken) {
-      thunkAPI.dispatch(removeUser());
-      cookieDestroyer();
-    }
-    return thunkAPI.rejectWithValue(errorData ?? (error as ApiError));
+    return thunkAPI.rejectWithValue(handleAuthTokenError(error, thunkAPI));
   }
 });

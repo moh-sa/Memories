@@ -1,7 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
 import { auth } from "services";
-import { cookieExtractor, cookieDestroyer } from "helpers";
+import { cookieExtractor, cookieDestroyer, getApiError } from "helpers";
 import type {
   ApiError,
   LoginRequest,
@@ -20,10 +19,7 @@ export const login = createAsyncThunk<
     return cookieExtractor(data.data.accessToken);
   }
   catch (error) {
-    if (axios.isAxiosError(error)) {
-      return thunkAPI.rejectWithValue(error.response?.data as ApiError);
-    }
-    return thunkAPI.rejectWithValue(error as ApiError);
+    return thunkAPI.rejectWithValue(getApiError(error));
   }
 });
 
@@ -37,10 +33,7 @@ export const register = createAsyncThunk<
     return data;
   }
   catch (error) {
-    if (axios.isAxiosError(error)) {
-      return thunkAPI.rejectWithValue(error.response?.data as ApiError);
-    }
-    return thunkAPI.rejectWithValue(error as ApiError);
+    return thunkAPI.rejectWithValue(getApiError(error));
   }
 });
 
@@ -55,10 +48,7 @@ export const logout = createAsyncThunk<
     return data;
   }
   catch (error) {
-    if (axios.isAxiosError(error)) {
-      return thunkAPI.rejectWithValue(error.response?.data as ApiError);
-    }
-    return thunkAPI.rejectWithValue(error as ApiError);
+    return thunkAPI.rejectWithValue(getApiError(error));
   }
 });
 
@@ -72,9 +62,6 @@ export const verifyToken = createAsyncThunk<
     return cookieExtractor(data.data.accessToken);
   }
   catch (error) {
-    if (axios.isAxiosError(error)) {
-      return thunkAPI.rejectWithValue(error.response?.data as ApiError);
-    }
-    return thunkAPI.rejectWithValue(error as ApiError);
+    return thunkAPI.rejectWithValue(getApiError(error));
   }
 });

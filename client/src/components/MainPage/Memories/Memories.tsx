@@ -1,7 +1,7 @@
 // Hooks
 import { useStyles } from "./styles";
 // UI Components
-import { Common } from "components";
+import Cards from "components/common/Cards";
 import { Grid } from "@mantine/core";
 import type {
   DeleteMemoryArg,
@@ -30,7 +30,7 @@ const Memories = ({ data, user, like, edit, _delete }: MemoriesProps) => {
       md={4}
       lg={3}
     >
-      <Common.Cards.Memory
+      <Cards.Memory
         key={memory._id}
         data={memory}
         user={user}

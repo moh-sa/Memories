@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { Textarea } from "@mantine/core";
-import { useFormContext, Controller } from "react-hook-form";
+import { useFormContext, Controller, type FieldValues } from "react-hook-form";
 
 interface TextareaProps {
   name: string;
@@ -27,7 +27,9 @@ const Area = ({
     trigger,
     control,
     formState: { errors },
-  } = useFormContext();
+  } = useFormContext<FieldValues>();
+
+  const errorMessage = errors[name]?.message;
 
   return (
     <Controller
@@ -43,12 +45,12 @@ const Area = ({
           placeholder={holder}
           description={desc}
           icon={icon}
-          error={errors[name]?.message as string | undefined}
+          error={typeof errorMessage === "string" ? errorMessage : undefined}
           minRows={minRows}
           maxRows={maxRows}
           onBlur={(e) => {
             void trigger(e.target.name);
-            (field.onBlur as (event: unknown) => void)(e);
+            field.onBlur();
           }}
         />
       )}

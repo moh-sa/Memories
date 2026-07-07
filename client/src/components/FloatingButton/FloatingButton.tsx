@@ -1,22 +1,20 @@
 // Hooks
-import type { CSSProperties } from "react";
-import { useSelector } from "react-redux";
-// Components
 import { Link } from "react-router-dom";
 // UI Components
 import { Button } from "@mantine/core";
 // Icons
 import { MdLibraryAdd } from "react-icons/md";
+import { useAppSelector } from "store/hooks";
 import type { RootState } from "store/store";
 // Styles
 import "./styles.css";
 
 const FloatingButton = () => {
-  const { user } = useSelector((state: RootState) => state.auth);
+  const user = useAppSelector((state: RootState) => state.auth.user);
 
   return (
     <Button
-      style={{ display: (!user && "none") as CSSProperties["display"] }}
+      style={{ display: user ? undefined : "none" }}
       className="FAB"
       component={Link}
       to="/memory/create"

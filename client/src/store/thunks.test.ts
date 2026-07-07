@@ -1,12 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
-vi.mock("components", () => ({
-  Common: {
-    Notifications: {
-      ID: { Pending: vi.fn(), Failure: vi.fn(), Success: vi.fn() },
-      noID: { Success: vi.fn(), Failure: vi.fn() },
-    },
-  },
+vi.mock("components/common/Notifications/WithID", () => ({
+  default: { Pending: vi.fn(), Failure: vi.fn(), Success: vi.fn() },
 }));
 
 vi.mock("services", () => ({
@@ -38,10 +33,14 @@ vi.mock("services", () => ({
   user: { getProfile: vi.fn() },
 }));
 
-vi.mock("helpers", () => ({
-  cookieExtractor: vi.fn(() => mockUser),
-  cookieDestroyer: vi.fn(),
-}));
+vi.mock("helpers", async () => {
+  const actual = await vi.importActual<typeof import("helpers")>("helpers");
+  return {
+    ...actual,
+    cookieExtractor: vi.fn(() => mockUser),
+    cookieDestroyer: vi.fn(),
+  };
+});
 
 import { makeStore } from "test/renderWithProviders";
 import { mockUser, mockMemory, mockComment } from "test/mockData";

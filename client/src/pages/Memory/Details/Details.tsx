@@ -14,7 +14,7 @@ import { Memory, Comments, Recommendations } from "layouts/MemoryDetails";
 import { Common } from "components";
 // Types
 import type { AppDispatch, RootState } from "store/store";
-import type { ApiError, LikeMemoryArg, Memory as MemoryType } from "types";
+import type { LikeMemoryArg, Memory as MemoryType } from "types";
 
 const Details = () => {
   // Basic
@@ -45,12 +45,11 @@ const Details = () => {
   };
 
   const getMemorys = async () => {
-    const { payload } = await dispatch(getSingle({ _id }));
-    const errorPayload = payload as ApiError | undefined;
+    const result = await dispatch(getSingle({ _id }));
 
-    if (errorPayload?.statusCode === 404) {
-      navigate(`/${errorPayload.statusCode}`, {
-        state: { code: errorPayload.statusCode, msg: errorPayload.message },
+    if (getSingle.rejected.match(result) && result.payload?.statusCode === 404) {
+      navigate(`/${result.payload.statusCode}`, {
+        state: { code: result.payload.statusCode, msg: result.payload.message },
       });
     }
   };

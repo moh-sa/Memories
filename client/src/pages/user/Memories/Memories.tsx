@@ -1,7 +1,6 @@
 // Hooks
 import { useState, useEffect } from "react";
 import { useStyles } from "./styles";
-import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useParams, useLocation, Link } from "react-router-dom";
 import { useTitle, useLocalStorage } from "Hooks";
@@ -13,9 +12,9 @@ import { Container, Title, Text, Button } from "@mantine/core";
 // Icons
 import { MdArrowBackIosNew } from "react-icons/md";
 // Types
-import type { AppDispatch, RootState } from "store/store";
+import type { RootState } from "store/store";
+import { useAppDispatch, useAppSelector } from "store/hooks";
 import type {
-  ApiError,
   DeleteMemoryArg,
   GetMemoriesArg,
   LikeMemoryArg,
@@ -25,7 +24,7 @@ import type {
 const Memories = () => {
   // Hookes
   const { classes } = useStyles();
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
   const { set } = useLocalStorage();
   const navigate = useNavigate();
   const { pathname } = useLocation();
@@ -35,13 +34,14 @@ const Memories = () => {
   // states
   const [isLoading, setIsLoading] = useState(true);
   // Selectors
-  const data = useSelector((state: RootState) => state.memories);
-  const { user } = useSelector((state: RootState) => state.auth);
+  const data = useAppSelector((state: RootState) => state.memories);
+  const { user } = useAppSelector((state: RootState) => state.auth);
   // Variables
   const currentPage = searchParams.get("page") ? searchParams.get("page") : 1;
+  const memories = data.memories;
   // Checkers
-  const isReady = data.memories !== null;
-  const isExists = (data.memories?.length as number) > 0;
+  const isReady = memories !== null;
+  const isExists = Boolean(memories?.length);
   const isMemory
     = pathname.includes("Memories") || pathname.includes("memories");
   const isLike = pathname.includes("Likes") || pathname.includes("likes");
@@ -50,8 +50,8 @@ const Memories = () => {
   // setTitle
   setTitle(`${username} type`);
 
-  const handleOnPageChange = (data: number) => {
-    setSearchParams({ page: data as unknown as string });
+  const handleOnPageChange = (page: number) => {
+    setSearchParams({ page: String(page) });
   };
 
   const likeMemory = async (data: LikeMemoryArg) => {
@@ -70,11 +70,10 @@ const Memories = () => {
   const getAllMemories = async (page: GetMemoriesArg["page"] = 1) => {
     setIsLoading(true);
 
-    const { payload } = await dispatch(getAll({ page, username, type }));
-    const errorPayload = payload as ApiError | undefined;
-    if (errorPayload?.statusCode === 404) {
-      navigate(`/${errorPayload.statusCode}`, {
-        state: { code: errorPayload.statusCode, msg: errorPayload.message },
+    const result = await dispatch(getAll({ page, username, type }));
+    if (getAll.rejected.match(result) && result.payload?.statusCode === 404) {
+      navigate(`/${result.payload.statusCode}`, {
+        state: { code: result.payload.statusCode, msg: result.payload.message },
       });
     }
 
@@ -117,7 +116,7 @@ const Memories = () => {
         {isReady && isExists && (
           <>
             <MainPage.Memories
-              data={data.memories as Memory[]}
+              data={memories}
               user={{ _id: user?._id, role: user?.role }}
               like={likeMemory}
               edit={editMemory}

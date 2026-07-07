@@ -24,7 +24,7 @@ const Memory = ({ data, like, user }: MemoryProps) => {
   let likeIcon;
 
   if (isLoggedIn) {
-    likeIcon = data.likes.includes((user)._id)
+    likeIcon = data.likes.includes(user._id)
       ? (
           <AiFillHeart size={18} color="red" />
         )
@@ -34,11 +34,15 @@ const Memory = ({ data, like, user }: MemoryProps) => {
   }
 
   const handleLike = () => {
-    like({ _id: data._id, userId: (user as User)._id, type: "cover" });
+    if (!user) {
+      return;
+    }
+
+    like({ _id: data._id, userId: user._id, type: "cover" });
   };
 
   return (
-    <section className={(classes as { section?: string }).section}>
+    <section>
       {/* Memory's Image with Mantine's AspectRatio component that keep the media in boundries all the time */}
       <Container>
         <Image

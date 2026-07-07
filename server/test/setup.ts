@@ -3,6 +3,7 @@ import { vi } from "vitest";
 // Env vars MUST be set before any config/app module is imported.
 // vi.mock calls below are hoisted, but their factories run lazily on first
 // import, so these assignments run before the app graph reads process.env.
+process.env.MONGODB_URL = "mongodb://127.0.0.1:27017/memories_test";
 process.env.JWT_ACCESS_SECRET = "test_access_secret";
 process.env.JWT_REFRESH_SECRET = "test_refresh_secret";
 // ms-value strings: jsonwebtoken-v9 valid (parsed by `ms` as milliseconds) and,

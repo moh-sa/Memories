@@ -3,6 +3,7 @@ import { userModel } from "../../models/index.js";
 import jwt from "jsonwebtoken";
 import { cookiesConfig, jwtConfig, imgConfig } from "../../configs/index.js";
 import { helpers } from "../../utils/index.js";
+import { getCookie } from "../../utils/getCookie.js";
 
 interface AccessTokenUser {
   _id: unknown;
@@ -12,26 +13,44 @@ interface AccessTokenUser {
   avatarURL?: string;
 }
 
+type AccessCookieOptions = CookieOptions & { overwrite?: boolean };
+
 export default async function verifyAccessToken(
   req: Request,
   res: Response,
   next: NextFunction,
 ) {
-  const accessToken = (req.cookies as Record<string, string>)[
-    cookiesConfig.access.name
-  ];
+  const accessToken = getCookie(req, cookiesConfig.access.name);
 
   const verifyToken = helpers.verifyJWT(
-    accessToken,
+    accessToken ?? "",
     jwtConfig.ACCESS_SECRET,
   );
 
   if (verifyToken.isExpired) {
-    const userId = (res.locals.data as { _id: string })._id;
+    const userId = res.locals.data?._id;
+    if (!userId) {
+      return res.status(406).json({
+        statusCode: 406,
+        isAuth: false,
+        from: "middlewares/auth/verifyAccessToken 1",
+        message: "Your credentials are invalid. Please try login again.",
+      });
+    }
+
     const userData = await userModel
       .findById(userId)
       .select("_id username avatar role")
-      .lean<AccessTokenUser>();
+      .lean<AccessTokenUser | null>();
+
+    if (!userData) {
+      return res.status(406).json({
+        statusCode: 406,
+        isAuth: false,
+        from: "middlewares/auth/verifyAccessToken 1",
+        message: "Your credentials are invalid. Please try login again.",
+      });
+    }
 
     userData.avatarURL = helpers.genImageURL(userData.avatar, imgConfig.avatar);
 
@@ -39,12 +58,11 @@ export default async function verifyAccessToken(
       expiresIn: jwtConfig.ACCESS_EXP,
     });
 
-    // note: `overwrite` is not part of express's CookieOptions; cast preserves
-    // this extra property being passed at runtime without altering behavior.
-    res.cookie(cookiesConfig.access.name, encryptedData, {
+    const cookieOptions: AccessCookieOptions = {
       ...cookiesConfig.access.options,
       overwrite: true,
-    } as CookieOptions);
+    };
+    res.cookie(cookiesConfig.access.name, encryptedData, cookieOptions);
 
     res.locals.accessToken = {
       statusCode: 201,

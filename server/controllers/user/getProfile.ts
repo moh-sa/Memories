@@ -4,7 +4,15 @@ import { helpers } from "../../utils/index.js";
 import { imgConfig } from "../../configs/index.js";
 
 export default async function getProfile(_req: Request, res: Response) {
-  const userId = res.locals.userId as string;
+  const userId = res.locals.userId;
+
+  if (!userId) {
+    return res.status(401).json({
+      statusCode: 401,
+      from: "controllers/user/getProfile 0",
+      message: "User is not authenticated.",
+    });
+  }
 
   try {
     const userPromise = userModel
