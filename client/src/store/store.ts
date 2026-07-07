@@ -1,0 +1,21 @@
+import { configureStore } from "@reduxjs/toolkit";
+import authReducer from "./auth/auth.slice";
+import memoryReducer from "./memory/memory.slice";
+import memoriesReducer from "./memories/memories.slice";
+import commentsReducer from "./comments/comments.slice";
+const ENV = import.meta.env.DEV;
+
+const store = configureStore({
+  reducer: {
+    auth: authReducer,
+    memory: memoryReducer,
+    memories: memoriesReducer,
+    comments: commentsReducer,
+  },
+  devTools: ENV,
+});
+
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;
+
+export default store;

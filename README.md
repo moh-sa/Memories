@@ -20,12 +20,21 @@ Spotlight search.
 
 ## Tour
 
-https://user-images.githubusercontent.com/46880411/209540393-7474e7d2-b27a-4257-bebc-33479e333f71.mp4
+<https://user-images.githubusercontent.com/46880411/209540393-7474e7d2-b27a-4257-bebc-33479e333f71.mp4>
+
+## Modernization
+
+Originally built in 2023 with Create React App and JavaScript.
+Migrated in 2026 to **Vite**, **TypeScript (strict)**, and **Vitest**
+with 151 tests at ~78% coverage, plus strict **ESLint v9** rules and
+**Husky** pre-commit linting.
+
+The original codebase is preserved in the [v1 branch](https://github.com/moh-sa/memories/tree/v1) for reference.
 
 ## Features
 
 - Home feed with paginated memory cards
-- Create memories with a rich text editor, tags, and a cover image
+- Create memories with a Tiptap rich text editor, tags, and a cover image
 - Like memories and comments
 - Edit or delete your own memories and comments
 - Spotlight search (Cmd/Ctrl+K) by title or tag with a dedicated results page
@@ -47,18 +56,21 @@ https://user-images.githubusercontent.com/46880411/209540393-7474e7d2-b27a-4257-
   page supports title and tag queries with pagination.
 - **Recommendations:** Related memories fetched via MongoDB aggregation. Uses
   `$match` on shared tags and `$sample` for random selection.
+- **Dev proxy:** In development, the Vite server proxies API routes to the
+  backend so the client can use a relative base URL.
 
 ## Tech stack
 
-| Layer          | Technologies                                       |
-| -------------- | -------------------------------------------------- |
-| **Frontend**   | React, React Router, Redux Toolkit, Mantine, Axios |
-| **Backend**    | Node.js, Express, Mongoose                         |
-| **Data**       | MongoDB                                            |
-| **Auth**       | Custom JWT (access + refresh cookies)              |
-| **Media**      | Cloudinary                                         |
-| **Email**      | Nodemailer                                         |
-| **Validation** | react-hook-form, Yup                               |
+| Layer          | Technologies                                                       |
+| -------------- | ------------------------------------------------------------------ |
+| **Frontend**   | React, TypeScript, Vite, React Router, Redux Toolkit, Mantine, Tiptap, Axios |
+| **Backend**    | Node.js, Express, TypeScript, Mongoose                             |
+| **Data**       | MongoDB                                                            |
+| **Auth**       | Custom JWT (access + refresh cookies)                              |
+| **Media**      | Cloudinary                                                         |
+| **Email**      | Nodemailer                                                         |
+| **Validation** | react-hook-form, Yup                                               |
+| **Tooling**    | ESLint + Stylistic, Vitest, Husky, lint-staged    |
 
 ## Architecture
 
@@ -101,15 +113,17 @@ sequenceDiagram
 account, and an SMTP email account for activation emails.
 
 ```bash
+# Repo root — optional, enables Husky pre-commit linting
+npm install
+
 # Terminal 1 — Server (default: http://localhost:5000)
 cd server && npm install && cp .env.example .env
-node seed/seed.js   # optional — seeds the database with sample data
+npm run seed   # optional — seeds the database with sample data
 npm start
 
 # Terminal 2 — Client (default: http://localhost:3000)
-cd client && npm install && cp .env.example .env
-npm start
+cd client && npm install
+npm run dev
 ```
 
-Fill in both `.env` files. Both `.env.example` files document every required
-variable.
+Fill in `server/.env` — `server/.env.example` documents every required variable.

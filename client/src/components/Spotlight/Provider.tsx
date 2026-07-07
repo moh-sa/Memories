@@ -1,0 +1,80 @@
+// Hooks
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+// Actions
+import { search, memory } from "services";
+// Components
+import { SpotlightProvider } from "@mantine/spotlight";
+// Icons
+import { TbSearch, TbTag, TbHome } from "react-icons/tb";
+import { MdOutlineLibraryBooks } from "react-icons/md";
+// Types
+import type { ReactNode } from "react";
+import type { SpotlightAction } from "@mantine/spotlight";
+
+interface ProviderProps {
+  children: ReactNode;
+}
+
+const Provider = ({ children }: ProviderProps) => {
+  const navigate = useNavigate();
+  const [actions, setActions] = useState<SpotlightAction[]>([]);
+
+  useEffect(() => {
+    void (async () => {
+      try {
+        const titlesPromise = search.getTitles();
+        const tagsPromise = memory.getTags();
+        const [titlesData, tagsData] = await Promise.all([
+          titlesPromise,
+          tagsPromise,
+        ]);
+
+        const titlesArr = titlesData.data.data.titles;
+        const tagsArr = tagsData.data.data.tags;
+
+        const titlesObjs = titlesArr.map(title => ({
+          title,
+          description: "memory",
+          group: "memories",
+          onTrigger: () => { navigate(`/search?query=${title}`); },
+          icon: <MdOutlineLibraryBooks size={18} />,
+        }));
+        const tagsObjs = tagsArr.map(tag => ({
+          title: tag,
+          description: "tag",
+          group: "tags",
+          onTrigger: () => { navigate(`/search?tags=${tag}`); },
+          icon: <TbTag size={18} />,
+        }));
+
+        const home = {
+          title: "Home",
+          group: "main",
+          onTrigger: () => { navigate(`/`); },
+          icon: <TbHome size={18} />,
+        };
+
+        setActions([home, ...titlesObjs, ...tagsObjs]);
+      }
+      catch (error) {
+        console.log(error);
+      }
+    })();
+  }, [navigate]);
+
+  return (
+    <SpotlightProvider
+      actions={actions}
+      limit={7}
+      shortcut="mod + K"
+      searchPlaceholder="Search by title..."
+      nothingFoundMessage="Nothing found..."
+      searchIcon={<TbSearch size={18} />}
+    >
+      {children}
+    </SpotlightProvider>
+  );
+};
+
+export default Provider;
