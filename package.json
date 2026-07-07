@@ -1,0 +1,16 @@
+{
+  "name": "memories-root",
+  "private": true,
+  "scripts": {
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "client/**/*.{ts,tsx}": "eslint --fix --config client/eslint.config.js",
+    "server/**/*.ts": "eslint --fix --config server/eslint.config.js"
+  },
+  "devDependencies": {
+    "eslint": "^9.39.4",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.0.8"
+  }
+}
