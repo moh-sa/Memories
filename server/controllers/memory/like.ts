@@ -20,27 +20,29 @@ export default async function like(req: Request, res: Response) {
     type: string;
   };
   const isCard = type === "card";
-  let memory: LeanMemoryLikes = {} as LeanMemoryLikes;
+  let memory!: LeanMemoryLikes;
 
   const response = helpers.tokenResponse(
     res.locals.accessToken,
-    "controllers/comment/like 0"
+    "controllers/comment/like 0",
   );
 
   try {
     memory = await memoryModel.findById(_id).lean<LeanMemoryLikes>();
 
-    const index = await memory.likes.findIndex(
-      (id: string) => id.toString() === userId
+    const index = memory.likes.findIndex(
+      (id: string) => id === userId,
     );
     if (index === -1) {
       memory.likes.push(userId);
-    } else {
+    }
+    else {
       memory.likes = memory.likes.filter(
-        (id: string) => id.toString() !== userId
+        (id: string) => id !== userId,
       );
     }
-  } catch (error) {
+  }
+  catch (error) {
     console.log(error);
     return res.status(503).json({
       accessToken: response,
@@ -60,12 +62,12 @@ export default async function like(req: Request, res: Response) {
 
     updatedMemory.coverURL = helpers.genImageURL(
       updatedMemory.cover,
-      isCard ? imgConfig.cover.small : imgConfig.cover.big
+      isCard ? imgConfig.cover.small : imgConfig.cover.big,
     );
 
     updatedMemory.author.avatarURL = helpers.genImageURL(
       updatedMemory.author.avatar,
-      imgConfig.avatar
+      imgConfig.avatar,
     );
 
     return res.status(200).json({
@@ -78,7 +80,8 @@ export default async function like(req: Request, res: Response) {
         },
       },
     });
-  } catch (error) {
+  }
+  catch (error) {
     console.log(error);
     return res.status(503).json({
       accessToken: response,

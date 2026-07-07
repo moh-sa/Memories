@@ -5,7 +5,7 @@ import { dbConfig } from "./configs/index.js";
 
 const PORT = process.env.PORT || 5000;
 
-//restart railway ¯\_(ツ)_/¯ #1
+// restart railway ¯\_(ツ)_/¯ #1
 
 mongoose
   .connect(dbConfig.URL, dbConfig.OPTIONS)
@@ -17,7 +17,8 @@ mongoose
       console.log(`Listening to port ${PORT}`);
     });
   })
-  .catch((error) => {
+  .catch((error: unknown) => {
     console.error("Connection error", error);
+    // eslint-disable-next-line n/no-process-exit -- intentional: exit the process on startup DB connection failure
     process.exit();
   });

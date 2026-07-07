@@ -9,6 +9,8 @@
     "mon": "tsx watch index.ts",
     "seed": "tsx seed/seed.ts",
     "typecheck": "tsc --noEmit",
+    "lint": "eslint . --cache",
+    "lint:fix": "eslint . --fix",
     "test": "vitest run"
   },
   "keywords": [],
@@ -27,6 +29,8 @@
     "uuid": "^8.3.2"
   },
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@stylistic/eslint-plugin": "^5.10.0",
     "@types/bcrypt": "^6.0.0",
     "@types/cookie-parser": "^1.4.10",
     "@types/cors": "^2.8.19",
@@ -35,7 +39,11 @@
     "@types/node": "^26.1.0",
     "@types/nodemailer": "^8.0.1",
     "@types/uuid": "^10.0.0",
+    "eslint": "^9.39.4",
+    "eslint-plugin-n": "^18.2.1",
+    "globals": "^17.7.0",
     "tsx": "^4.23.0",
-    "typescript": "^6.0.3"
+    "typescript": "~5.9",
+    "typescript-eslint": "^8.63.0"
   }
 }

@@ -4,7 +4,7 @@ import { memoryModel } from "../../models/index.js";
 export default async function getTitles(_req: Request, res: Response) {
   try {
     const titles = (await memoryModel.find().select("title")).map(
-      (title) => title.title
+      title => title.title,
     );
 
     res.status(200).json({
@@ -14,7 +14,8 @@ export default async function getTitles(_req: Request, res: Response) {
         titles,
       },
     });
-  } catch (error) {
+  }
+  catch (error) {
     console.log(error);
     res.status(503).json({
       statusCode: 503,

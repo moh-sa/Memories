@@ -21,7 +21,8 @@ export default async function (req: Request, res: Response) {
 
   try {
     userData.avatar = await cloudinary.upload(userData.avatar);
-  } catch (error) {
+  }
+  catch {
     return res.status(503).json({
       memory: {
         statusCode: 503,
@@ -41,7 +42,7 @@ export default async function (req: Request, res: Response) {
     await email.activationCode(
       newUser.username,
       newUser.email,
-      userData.activationCode
+      userData.activationCode,
     );
 
     res.status(201).json({
@@ -50,7 +51,8 @@ export default async function (req: Request, res: Response) {
       message:
         "You have been successfully registered. Please check your email to activate the account.",
     });
-  } catch (error) {
+  }
+  catch (error) {
     const message = error instanceof Error ? error.message : String(error);
     console.log(message);
     res.status(503).json({

@@ -4,7 +4,7 @@ import { userCons as user } from "../controllers/index.js";
 
 const router = express.Router();
 
-//GET
+// GET
 router.get("/getProfile/:username", dbMW.isUsernameExist, user.getProfile);
 
 export default router;

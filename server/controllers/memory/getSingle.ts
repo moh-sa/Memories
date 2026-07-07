@@ -11,7 +11,7 @@ interface LeanSingleMemory {
 
 export default async function getSingle(req: Request, res: Response) {
   const { _id } = req.params;
-  let memory: LeanSingleMemory = {} as LeanSingleMemory;
+  let memory!: LeanSingleMemory;
 
   try {
     memory = await memoryModel
@@ -23,7 +23,7 @@ export default async function getSingle(req: Request, res: Response) {
 
     memory.author.avatarURL = helpers.genImageURL(
       memory.author.avatar,
-      imgConfig.avatar
+      imgConfig.avatar,
     );
 
     return res.status(200).json({
@@ -33,7 +33,8 @@ export default async function getSingle(req: Request, res: Response) {
         memory,
       },
     });
-  } catch (error) {
+  }
+  catch (error) {
     console.log(error);
     return res.status(503).json({
       statusCode: 503,

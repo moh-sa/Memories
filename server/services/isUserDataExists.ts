@@ -6,7 +6,8 @@ export default async function (data: FilterQuery<User>) {
   const isExists = await userModel.exists(data);
   if (isExists) {
     return true;
-  } else {
+  }
+  else {
     return false;
   }
 }

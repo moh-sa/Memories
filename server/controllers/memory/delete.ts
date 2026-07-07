@@ -8,7 +8,7 @@ export default async function _delete(req: Request, res: Response) {
 
   const response = helpers.tokenResponse(
     res.locals.accessToken,
-    "controllers/comment/delete 0"
+    "controllers/comment/delete 0",
   );
 
   try {
@@ -23,7 +23,8 @@ export default async function _delete(req: Request, res: Response) {
         message: "Your memory has been successfully deleted.",
       },
     });
-  } catch (error) {
+  }
+  catch (error) {
     console.log(error);
     return res.status(503).json({
       accessToken: response,

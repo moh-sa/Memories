@@ -4,39 +4,39 @@ import { memoryCons as memory } from "../controllers/index.js";
 
 const router = express.Router();
 
-//GET
+// GET
 router.get("/getALl", dbMW.isUsernameExist, memory.getAll);
 router.get("/getTags", memory.getTags);
 router.get(
   "/getSingle/:_id",
   [dbMW.isValid, dbMW.isMemoryExist],
-  memory.getSingle
+  memory.getSingle,
 );
 
-//POST
+// POST
 router.post(
   "/create",
   [authMW.verifyRefreshToken, authMW.verifyAccessToken],
-  memory.create
+  memory.create,
 );
 
-//PATCH
+// PATCH
 router.patch(
   "/like",
   [authMW.verifyRefreshToken, authMW.verifyAccessToken, dbMW.isValid],
-  memory.like
+  memory.like,
 );
 router.patch(
   "/update",
   [authMW.verifyRefreshToken, authMW.verifyAccessToken, dbMW.isValid],
-  memory.update
+  memory.update,
 );
 
-//DELETE
+// DELETE
 router.delete(
   "/delete",
   [authMW.verifyRefreshToken, authMW.verifyAccessToken, dbMW.isValid],
-  memory._delete
+  memory._delete,
 );
 
 export default router;

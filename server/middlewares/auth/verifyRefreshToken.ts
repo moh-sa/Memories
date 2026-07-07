@@ -2,10 +2,10 @@ import type { Request, Response, NextFunction } from "express";
 import { cookiesConfig, jwtConfig } from "../../configs/index.js";
 import { helpers } from "../../utils/index.js";
 
-export default async function verifyRefreshToken(
+export default function verifyRefreshToken(
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) {
   const refreshToken = (req.cookies as Record<string, string>)[
     cookiesConfig.refresh.name
@@ -21,9 +21,9 @@ export default async function verifyRefreshToken(
     });
   }
 
-  const verifyToken = await helpers.verifyJWT(
+  const verifyToken = helpers.verifyJWT(
     refreshToken,
-    jwtConfig.REFRESH_SECRET
+    jwtConfig.REFRESH_SECRET,
   );
 
   if (verifyToken.isExpired) {
@@ -36,7 +36,8 @@ export default async function verifyRefreshToken(
         message: "Your Session has been expired. Please Login again.",
       },
     });
-  } else if (verifyToken.isSecretNotValid) {
+  }
+  else if (verifyToken.isSecretNotValid) {
     res.clearCookie(cookiesConfig.refresh.name);
 
     return res.status(406).json({

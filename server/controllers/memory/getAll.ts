@@ -25,12 +25,13 @@ export default async function (req: Request, res: Response) {
 
   const LIMIT = 8;
   const startIndex = (parseInt(page) - 1) * LIMIT;
-  let memories: LeanMemory[] = [];
-  let numberOfMemories = 1;
+  let memories!: LeanMemory[];
+  let numberOfMemories!: number;
 
   try {
     numberOfMemories = await memoryModel.countDocuments(query);
-  } catch (error) {
+  }
+  catch (error) {
     console.log(error);
     return res.status(503).json({
       statusCode: 503,
@@ -48,32 +49,32 @@ export default async function (req: Request, res: Response) {
       .populate("author", "username avatar")
       .lean<LeanMemory[]>();
 
-    //Get Number of Comments for each Memory
+    // Get Number of Comments for each Memory
     await Promise.all(
       memories.map(
-        async (memory) =>
+        async memory =>
           (memory.numberOfComments = await commentModel.countDocuments({
             memoryId: memory._id,
-          }))
-      )
+          })),
+      ),
     );
 
-    //Generate Cover URL
+    // Generate Cover URL
     memories.map(
-      (memory) =>
+      memory =>
         (memory.coverURL = helpers.genImageURL(
           memory.cover,
-          imgConfig.cover.small
-        ))
+          imgConfig.cover.small,
+        )),
     );
 
-    //Generate Avatar URL
+    // Generate Avatar URL
     memories.map(
-      (memory) =>
+      memory =>
         (memory.author.avatarURL = helpers.genImageURL(
           memory.author.avatar,
-          imgConfig.avatar
-        ))
+          imgConfig.avatar,
+        )),
     );
 
     return res.status(200).json({
@@ -84,7 +85,8 @@ export default async function (req: Request, res: Response) {
         numberOfPages: Math.ceil(numberOfMemories / LIMIT),
       },
     });
-  } catch (error) {
+  }
+  catch (error) {
     console.log(error);
     return res.status(503).json({
       statusCode: 503,

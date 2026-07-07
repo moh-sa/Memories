@@ -4,10 +4,10 @@ import { jwtConfig, cookiesConfig, imgConfig } from "../../configs/index.js";
 import { helpers } from "../../utils/index.js";
 import type { AuthUser } from "../../types/express.js";
 
-export default async function (req: Request, res: Response) {
+export default function (req: Request, res: Response) {
   const { _id, username, role, avatar } = req.localData as AuthUser;
   const userId = _id.toString();
-  let userData: AuthUser = { _id, username, role, avatar };
+  const userData: AuthUser = { _id, username, role, avatar };
 
   userData.avatarURL = helpers.genImageURL(avatar, imgConfig.avatar);
 
@@ -18,7 +18,7 @@ export default async function (req: Request, res: Response) {
     jwtConfig.ACCESS_SECRET,
     {
       expiresIn: jwtConfig.ACCESS_EXP,
-    }
+    },
   );
 
   const refreshToken = jwt.sign(
@@ -28,19 +28,19 @@ export default async function (req: Request, res: Response) {
     jwtConfig.REFRESH_SECRET,
     {
       expiresIn: jwtConfig.REFRESH_EXP,
-    }
+    },
   );
 
   res.cookie(
     cookiesConfig.access.name,
     accessToken,
-    cookiesConfig.access.options
+    cookiesConfig.access.options,
   );
 
   res.cookie(
     cookiesConfig.refresh.name,
     refreshToken,
-    cookiesConfig.refresh.options
+    cookiesConfig.refresh.options,
   );
 
   res.status(200).json({

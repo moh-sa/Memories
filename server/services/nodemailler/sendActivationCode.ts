@@ -1,9 +1,9 @@
 import client from "./options.js";
 
 const sendEmail = async (name: string, email: string, code: string) => {
-  const link = `${process.env.FRONT_URL}/activation?code=${code}`;
+  const link = `${process.env.FRONT_URL as string}/activation?code=${code}`;
   const sentEmail = await client.sendMail({
-    from: `"Memories" <${process.env.EMAIL}>`,
+    from: `"Memories" <${process.env.EMAIL as string}>`,
     to: email,
     subject: "Memories - Almost There! Confirm Your Registration ",
     text: "Hello world?",

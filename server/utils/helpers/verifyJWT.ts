@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 
-export default async function verifyJWT(token: string, secret: string) {
+export default function verifyJWT(token: string, secret: string) {
   const response = {
     data: {},
     isSecretNotValid: false,
@@ -8,21 +8,24 @@ export default async function verifyJWT(token: string, secret: string) {
   };
 
   try {
-    const data = await jwt.verify(token, secret);
+    const data = jwt.verify(token, secret);
     response.data = data;
-  } catch (error) {
+  }
+  catch (error) {
     const message = error instanceof Error ? error.message : String(error);
     if (
-      message === "jwt expired" ||
-      message === "jwt must be provided"
+      message === "jwt expired"
+      || message === "jwt must be provided"
     ) {
       response.isExpired = true;
-    } else if (
-      message === "invalid signature" ||
-      message === "jwt malformed"
+    }
+    else if (
+      message === "invalid signature"
+      || message === "jwt malformed"
     ) {
       response.isSecretNotValid = true;
-    } else {
+    }
+    else {
       console.log("verifyJWT 1: ", message);
     }
   }

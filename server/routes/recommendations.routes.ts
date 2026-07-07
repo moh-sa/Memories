@@ -4,7 +4,7 @@ import { memoryCons as memory } from "../controllers/index.js";
 
 const router = express.Router();
 
-//GET
+// GET
 router.get("/:_id", dbMW.isValid, memory.getRecommendations);
 
 export default router;

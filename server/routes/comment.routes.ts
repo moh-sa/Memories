@@ -4,33 +4,33 @@ import { commentCons as comment } from "../controllers/index.js";
 
 const router = express.Router();
 
-//GET
+// GET
 router.get("/getALl", [dbMW.isValid, dbMW.isCommentsExist], comment.getAll);
 
-//POST
+// POST
 router.post(
   "/create",
   [authMW.verifyRefreshToken, authMW.verifyAccessToken],
-  comment.create
+  comment.create,
 );
 
-//PATCH
+// PATCH
 router.patch(
   "/like",
   [authMW.verifyRefreshToken, authMW.verifyAccessToken, dbMW.isValid],
-  comment.like
+  comment.like,
 );
 router.patch(
   "/update",
   [authMW.verifyRefreshToken, authMW.verifyAccessToken, dbMW.isValid],
-  comment.update
+  comment.update,
 );
 
-//DELETE
+// DELETE
 router.delete(
   "/delete",
   [authMW.verifyRefreshToken, authMW.verifyAccessToken, dbMW.isValid],
-  comment._delete
+  comment._delete,
 );
 
 export default router;

@@ -1,9 +1,9 @@
 import type { Request, Response, NextFunction } from "express";
 
-export default async function isUserActive(
+export default function isUserActive(
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) {
   // note: localData is declared as AuthUser which omits `isActive`; cast to the
   // shape actually stored at runtime (a full user document) to read it.

@@ -17,7 +17,7 @@ const commentSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 export type Comment = InferSchemaType<typeof commentSchema>;

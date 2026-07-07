@@ -3,7 +3,7 @@ import { searchCons as search } from "../controllers/index.js";
 
 const router = express.Router();
 
-//GET
+// GET
 router.get("/", search.search);
 router.get("/getTitles", search.getTitles);
 

@@ -20,11 +20,11 @@ export default async function getAll(req: Request, res: Response) {
       .lean<LeanPopulatedComment[]>();
 
     comments.map(
-      (comment) =>
+      comment =>
         (comment.author.avatarURL = helpers.genImageURL(
           comment.author.avatar,
-          imgConfig.avatar
-        ))
+          imgConfig.avatar,
+        )),
     );
 
     res.status(200).json({
@@ -34,7 +34,8 @@ export default async function getAll(req: Request, res: Response) {
         comments,
       },
     });
-  } catch (error) {
+  }
+  catch (error) {
     console.log(error);
     res.status(503).json({
       statusCode: 503,

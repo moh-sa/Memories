@@ -15,15 +15,15 @@ interface AccessTokenUser {
 export default async function verifyAccessToken(
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) {
   const accessToken = (req.cookies as Record<string, string>)[
     cookiesConfig.access.name
   ];
 
-  const verifyToken = await helpers.verifyJWT(
+  const verifyToken = helpers.verifyJWT(
     accessToken,
-    jwtConfig.ACCESS_SECRET
+    jwtConfig.ACCESS_SECRET,
   );
 
   if (verifyToken.isExpired) {
@@ -35,7 +35,7 @@ export default async function verifyAccessToken(
 
     userData.avatarURL = helpers.genImageURL(userData.avatar, imgConfig.avatar);
 
-    const encryptedData = await jwt.sign(userData, jwtConfig.ACCESS_SECRET, {
+    const encryptedData = jwt.sign(userData, jwtConfig.ACCESS_SECRET, {
       expiresIn: jwtConfig.ACCESS_EXP,
     });
 
@@ -55,7 +55,8 @@ export default async function verifyAccessToken(
         accessToken: cookiesConfig.access.name,
       },
     };
-  } else if (verifyToken.isSecretNotValid) {
+  }
+  else if (verifyToken.isSecretNotValid) {
     res.clearCookie(cookiesConfig.access.name);
 
     return res.status(406).json({

@@ -5,13 +5,13 @@ export default function logout(_req: Request, res: Response) {
   res.cookie(
     cookiesConfig.access.name,
     "(☞ﾟヮﾟ)☞☜(ﾟヮﾟ☜)",
-    cookiesConfig.access.delete
+    cookiesConfig.access.delete,
   );
 
   res.cookie(
     cookiesConfig.refresh.name,
     "(☞ﾟヮﾟ)☞☜(ﾟヮﾟ☜)",
-    cookiesConfig.refresh.delete
+    cookiesConfig.refresh.delete,
   );
 
   res.status(200).json({

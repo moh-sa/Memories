@@ -7,13 +7,13 @@ const router = express.Router();
 router.post(
   "/register",
   [authMW.isUsernameExists, authMW.isEmailExists],
-  authCons.register
+  authCons.register,
 );
 
 router.post(
   "/login",
   [authMW.isEmailExists, authMW.isPasswordCorrect, authMW.isUserActive],
-  authCons.login
+  authCons.login,
 );
 
 router.get("/logout", authCons.logout);
@@ -21,7 +21,7 @@ router.get("/logout", authCons.logout);
 router.get(
   "/verifyToken",
   [authMW.verifyRefreshToken, authMW.verifyAccessToken],
-  authCons.verifyToken
+  authCons.verifyToken,
 );
 
 router.get("/verifyCode", authCons.verifyCode);

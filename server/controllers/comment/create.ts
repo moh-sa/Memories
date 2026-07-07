@@ -8,14 +8,14 @@ export default async function create(req: Request, res: Response) {
 
   const response = helpers.tokenResponse(
     res.locals.accessToken,
-    "controllers/comment/create 0"
+    "controllers/comment/create 0",
   );
 
   try {
     const comment = new commentModel(data);
     await comment
       .save()
-      .then((res) => res.populate("author", "username avatar"));
+      .then(res => res.populate("author", "username avatar"));
 
     const newComment = (await JSON.parse(JSON.stringify(comment))) as {
       author: { avatarURL?: string };
@@ -24,7 +24,7 @@ export default async function create(req: Request, res: Response) {
     // types `author` as an ObjectId, so cast to read the populated avatar.
     newComment.author.avatarURL = helpers.genImageURL(
       (comment.author as unknown as { avatar: string }).avatar,
-      imgConfig.avatar
+      imgConfig.avatar,
     );
 
     res.status(200).json({
@@ -37,7 +37,8 @@ export default async function create(req: Request, res: Response) {
         },
       },
     });
-  } catch (error) {
+  }
+  catch (error) {
     console.log(error);
     res.status(503).json({
       accessToken: response,

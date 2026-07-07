@@ -14,7 +14,7 @@ declare global {
       localData?: AuthUser;
     }
     interface Locals {
-      data?: { _id: string;[k: string]: unknown };
+      data?: { _id: string; [k: string]: unknown };
       accessToken?: unknown;
     }
   }

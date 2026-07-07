@@ -15,7 +15,8 @@ export default async function (req: Request, res: Response, next: NextFunction) 
         message: "Either email or password is incorrect.",
       });
     }
-  } else if (req.url.includes("register")) {
+  }
+  else if (req.url.includes("register")) {
     if (userData) {
       return res.status(409).json({
         statusCode: 409,

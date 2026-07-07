@@ -7,9 +7,9 @@ export default async function getTags(_req: Request, res: Response) {
       .find()
       .select("tags")
       .lean<{ tags: string[] }[]>();
-    const tagsArray = tagsObj.map((memory) => memory.tags).flat();
+    const tagsArray = tagsObj.map(memory => memory.tags).flat();
     const uniqueTags = tagsArray.filter(
-      (value, index, array) => array.indexOf(value) === index
+      (value, index, array) => array.indexOf(value) === index,
     );
     res.status(200).json({
       statusCode: 200,
@@ -18,7 +18,8 @@ export default async function getTags(_req: Request, res: Response) {
         tags: uniqueTags,
       },
     });
-  } catch (error) {
+  }
+  catch (error) {
     console.log(error);
     const message = error instanceof Error ? error.message : String(error);
     return res.status(503).json({

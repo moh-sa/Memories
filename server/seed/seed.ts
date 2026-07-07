@@ -38,7 +38,7 @@ interface SeedData {
 
 const seedPath = join(dirname(fileURLToPath(import.meta.url)), "seed.json");
 const { users, memories, comments } = JSON.parse(
-  readFileSync(seedPath, "utf8")
+  readFileSync(seedPath, "utf8"),
 ) as SeedData;
 
 const oid = (id: string) => new mongoose.Types.ObjectId(id);
@@ -69,7 +69,7 @@ for (const user of users) {
 }
 
 await memoryModel.insertMany(
-  memories.map((m) => ({
+  memories.map(m => ({
     _id: oid(m._id),
     title: m.title,
     description: m.description,
@@ -78,17 +78,17 @@ await memoryModel.insertMany(
     tags: m.tags ?? [],
     likes: m.likes ?? [],
     author: oid(m.author),
-  }))
+  })),
 );
 
 await commentModel.insertMany(
-  comments.map((c) => ({
+  comments.map(c => ({
     _id: oid(c._id),
     body: c.body,
     likes: c.likes ?? [],
     memoryId: oid(c.memoryId),
     author: oid(c.author),
-  }))
+  })),
 );
 
 console.log(`Seeded ${users.length} users, ${memories.length} memories, ${comments.length} comments`);

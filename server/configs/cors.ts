@@ -1,5 +1,5 @@
 const origins = process.env.CORS_ORIGINS?.split(",")
-  .map((s) => s.trim())
+  .map(s => s.trim())
   .filter(Boolean);
 
 export default {

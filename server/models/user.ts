@@ -49,7 +49,7 @@ const userSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 export type User = InferSchemaType<typeof userSchema>;
@@ -58,16 +58,14 @@ userSchema.pre(
   "save",
   async function (
     this: HydratedDocument<User>,
-    next: CallbackWithoutResultAndOptionalError
+    next: CallbackWithoutResultAndOptionalError,
   ) {
-    const user = this;
-
-    if (user.isModified("password")) {
-      user.password = await helpers.genBcrypt(user.password);
+    if (this.isModified("password")) {
+      this.password = await helpers.genBcrypt(this.password);
     }
 
     next();
-  }
+  },
 );
 
 const userModel = mongoose.model("User", userSchema);

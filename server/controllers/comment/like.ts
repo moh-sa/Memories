@@ -12,28 +12,30 @@ interface LeanPopulatedComment {
 }
 
 export default async function like(req: Request, res: Response) {
-  let comment: LeanComment = {} as LeanComment;
+  let comment!: LeanComment;
   const { _id, userId } = req.body as { _id: string; userId: string };
 
   const response = helpers.tokenResponse(
     res.locals.accessToken,
-    "controllers/comment/like 0"
+    "controllers/comment/like 0",
   );
 
   try {
     comment = await commentModel.findById(_id).lean<LeanComment>();
 
-    const index = await comment.likes.findIndex(
-      (id: string) => id.toString() === userId
+    const index = comment.likes.findIndex(
+      (id: string) => id === userId,
     );
     if (index === -1) {
       comment.likes.push(userId);
-    } else {
+    }
+    else {
       comment.likes = comment.likes.filter(
-        (id: string) => id.toString() !== userId
+        (id: string) => id !== userId,
       );
     }
-  } catch (error) {
+  }
+  catch (error) {
     console.log(error);
     return res.status(503).json({
       accessToken: response,
@@ -53,7 +55,7 @@ export default async function like(req: Request, res: Response) {
 
     updatedComment.author.avatarURL = helpers.genImageURL(
       updatedComment.author.avatar,
-      imgConfig.avatar
+      imgConfig.avatar,
     );
 
     return res.status(200).json({
@@ -66,7 +68,8 @@ export default async function like(req: Request, res: Response) {
         },
       },
     });
-  } catch (error) {
+  }
+  catch (error) {
     console.log(error);
     return res.status(503).json({
       accessToken: response,

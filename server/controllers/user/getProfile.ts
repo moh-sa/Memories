@@ -17,8 +17,8 @@ export default async function getProfile(_req: Request, res: Response) {
       author: userId,
     });
 
-    const [userData, numberOfMemories, numberOfComments, numberOfLikes] =
-      await Promise.all([
+    const [userData, numberOfMemories, numberOfComments, numberOfLikes]
+      = await Promise.all([
         userPromise,
         memoriesCountPromise,
         commentsCountPromise,
@@ -37,7 +37,8 @@ export default async function getProfile(_req: Request, res: Response) {
         numberOfComments,
       },
     });
-  } catch (error) {
+  }
+  catch (error) {
     console.log(error);
     res.status(503).json({
       statusCode: 503,

@@ -21,7 +21,7 @@ const memorySchema = new mongoose.Schema(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 export type Memory = InferSchemaType<typeof memorySchema>;

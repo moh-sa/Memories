@@ -4,7 +4,7 @@ import { isUserDataExists } from "../../services/index.js";
 export default async function isUsernameExists(
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) {
   const { username } = req.body as { username: string };
 

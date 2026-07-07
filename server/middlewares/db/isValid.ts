@@ -1,10 +1,10 @@
 import type { Request, Response, NextFunction } from "express";
 import mongoose from "mongoose";
 
-export default async function isValid(
+export default function isValid(
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) {
   const { _id: bodyID } = req.body as { _id?: string };
   const { _id: paramsID } = req.params;

@@ -8,11 +8,11 @@ export default async function update(req: Request, res: Response) {
 
   const response = helpers.tokenResponse(
     res.locals.accessToken,
-    "controllers/memory/update 0"
+    "controllers/memory/update 0",
   );
 
   memory.tags = memory.tags.map((tag: string) =>
-    tag.trim().toLowerCase().split(" ").join("_")
+    tag.trim().toLowerCase().split(" ").join("_"),
   );
 
   try {
@@ -23,7 +23,7 @@ export default async function update(req: Request, res: Response) {
 
     updatedMemory.cover = helpers.genImageURL(
       updatedMemory.cover,
-      imgConfig.cover.small
+      imgConfig.cover.small,
     );
 
     res.status(200).json({
@@ -37,7 +37,8 @@ export default async function update(req: Request, res: Response) {
         },
       },
     });
-  } catch (error) {
+  }
+  catch (error) {
     console.log(error);
     return res.status(503).json({
       accessToken: response,

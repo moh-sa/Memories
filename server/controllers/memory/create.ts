@@ -15,12 +15,13 @@ export default async function (req: Request, res: Response) {
 
   const response = helpers.tokenResponse(
     res.locals.accessToken,
-    "controllers/comment/create 0"
+    "controllers/comment/create 0",
   );
 
   try {
     memory.cover = await cloudinary.upload(memory.cover);
-  } catch (error) {
+  }
+  catch {
     return res.status(503).json({
       accessToken: response,
       memory: {
@@ -43,7 +44,8 @@ export default async function (req: Request, res: Response) {
         message: "Done! Thanks for sharing your memory.",
       },
     });
-  } catch (error) {
+  }
+  catch (error) {
     const message = error instanceof Error ? error.message : String(error);
     return res.status(503).json({
       accessToken: response,
