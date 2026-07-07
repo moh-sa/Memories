@@ -1,12 +1,19 @@
+import { lazy, Suspense } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import Main from "layouts/Main/Main";
 // Public Components
 import { Home, Missing, Auth } from "pages";
 // Protected Components
-import { Memory, User, Search } from "pages";
+import User from "pages/user";
+import Search from "pages/search";
+import MemoryDetails from "pages/Memory/Details/Details";
 // Controll Access
 import RequireAuth from "components/Auth/RequireAuth";
 import { PersistLogin, NotRequireAuth } from "components/Auth";
+import LoadingOverlay from "components/common/Loader/Overlay";
+
+const MemoryCreate = lazy(() => import("pages/Memory/Create/Create"));
+const MemoryEdit = lazy(() => import("pages/Memory/Edit/Edit"));
 
 const App = () => {
   return (
@@ -28,7 +35,7 @@ const App = () => {
           {/* memory routes */}
           <Route path="memory">
             <Route index element={<Navigate to="/" />} />
-            <Route path=":_id" element={<Memory.Details />} />
+            <Route path=":_id" element={<MemoryDetails />} />
           </Route>
 
           {/* search routes */}
@@ -40,8 +47,22 @@ const App = () => {
           {/* memory routes */}
           <Route path="memory">
             <Route element={<RequireAuth />}>
-              <Route path="create" element={<Memory.Create />} />
-              <Route path="edit" element={<Memory.Edit />} />
+              <Route
+                path="create"
+                element={(
+                  <Suspense fallback={<LoadingOverlay />}>
+                    <MemoryCreate />
+                  </Suspense>
+                )}
+              />
+              <Route
+                path="edit"
+                element={(
+                  <Suspense fallback={<LoadingOverlay />}>
+                    <MemoryEdit />
+                  </Suspense>
+                )}
+              />
             </Route>
           </Route>
 
