@@ -2,13 +2,14 @@
   "name": "server",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "index.ts",
   "type": "module",
   "scripts": {
-    "start": "node index.js",
-    "mon": "nodemon index.js",
-    "seed": "node seed/seed.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "tsx index.ts",
+    "mon": "tsx watch index.ts",
+    "seed": "tsx seed/seed.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
   },
   "keywords": [],
   "author": "",
@@ -24,5 +25,17 @@
     "mongoose": "^6.13.10",
     "nodemailer": "^6.10.1",
     "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^6.0.0",
+    "@types/cookie-parser": "^1.4.10",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^4.17.25",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/node": "^26.1.0",
+    "@types/nodemailer": "^8.0.1",
+    "@types/uuid": "^10.0.0",
+    "tsx": "^4.23.0",
+    "typescript": "^6.0.3"
   }
 }
