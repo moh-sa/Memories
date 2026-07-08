@@ -1,9 +1,7 @@
 import axios from "axios";
-
-// Empty baseURL uses the Vite dev proxy in development.
-const URL = import.meta.env.VITE_API_URL || "";
+import { clientEnv } from "config/env";
 
 export const API = axios.create({
-  baseURL: URL,
+  baseURL: clientEnv.apiUrl,
   withCredentials: true,
 });

@@ -56,8 +56,6 @@ The original codebase is preserved in the [v1 branch](https://github.com/moh-sa/
   page supports title and tag queries with pagination.
 - **Recommendations:** Related memories fetched via MongoDB aggregation. Uses
   `$match` on shared tags and `$sample` for random selection.
-- **Dev proxy:** In development, the Vite server proxies API routes to the
-  backend so the client can use a relative base URL.
 
 ## Tech stack
 
@@ -122,8 +120,9 @@ npm run seed   # optional — seeds the database with sample data
 npm start
 
 # Terminal 2 — Client (default: http://localhost:3000)
-cd client && npm install
+cd client && npm install && cp .env.example .env
 npm run dev
 ```
 
 Fill in `server/.env` — `server/.env.example` documents every required variable.
+Fill in `client/.env` — `client/.env.example` with required variables.
